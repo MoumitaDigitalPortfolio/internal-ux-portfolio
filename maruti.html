@@ -1,0 +1,2337 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+
+>
+
+<meta
+name="description"
+content="Internal UX case study for a service marketplace designed for Maruti dealer operations."
+
+>
+
+  <title>
+    Service Marketplace | Internal UX Case Study
+  </title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+
+    tailwind.config = {
+
+      theme: {
+
+        extend: {
+
+          colors: {
+
+            maruti: "#004B8D",
+
+            marutiDark: "#003566",
+
+            marutiBright: "#0078C8",
+
+            marutiLight: "#EAF4FA",
+
+            sky: "#D9ECF7",
+
+            ivory: "#F7F5F0",
+
+            paper: "#FFFFFF",
+
+            mist: "#EEF3F6",
+
+            steel: "#61717D",
+
+            charcoal: "#20272D",
+
+            red: "#D71920",
+
+            redDark: "#AE1118"
+
+          },
+
+          boxShadow: {
+
+            soft:
+              "0 18px 55px rgba(0, 75, 141, 0.08)",
+
+            float:
+              "0 30px 85px rgba(0, 75, 141, 0.14)",
+
+            card:
+              "0 10px 35px rgba(0, 75, 141, 0.07)"
+
+          }
+
+        }
+
+      }
+
+    }
+
+  </script>
+
+  <style>
+
+    html {
+
+      scroll-behavior: smooth;
+
+    }
+
+
+    body {
+
+      font-family:
+
+        Inter,
+
+        ui-sans-serif,
+
+        system-ui,
+
+        -apple-system,
+
+        BlinkMacSystemFont,
+
+        "Segoe UI",
+
+        sans-serif;
+
+      background: #F7F5F0;
+
+      color: #20272D;
+
+    }
+
+
+    .display-font {
+
+      font-family:
+
+        Georgia,
+
+        "Times New Roman",
+
+        serif;
+
+    }
+
+
+    .hero-pattern {
+
+      background-image:
+
+        linear-gradient(
+
+          118deg,
+
+          rgba(0, 75, 141, 0.11),
+
+          transparent 42%
+
+        ),
+
+        radial-gradient(
+
+          circle at 88% 18%,
+
+          rgba(0, 120, 200, 0.14),
+
+          transparent 28%
+
+        ),
+
+        radial-gradient(
+
+          circle at 75% 84%,
+
+          rgba(215, 25, 32, 0.06),
+
+          transparent 23%
+
+        );
+
+    }
+
+
+    .grid-texture {
+
+      background-image:
+
+        linear-gradient(
+
+          rgba(0, 75, 141, 0.045) 1px,
+
+          transparent 1px
+
+        ),
+
+        linear-gradient(
+
+          90deg,
+
+          rgba(0, 75, 141, 0.045) 1px,
+
+          transparent 1px
+
+        );
+
+      background-size:
+
+        42px 42px;
+
+    }
+
+
+    .reveal {
+
+      opacity: 0;
+
+      transform: translateY(24px);
+
+      transition:
+
+        opacity 0.7s ease,
+
+        transform 0.7s ease;
+
+    }
+
+
+    .reveal.visible {
+
+      opacity: 1;
+
+      transform: translateY(0);
+
+    }
+
+
+    .nav-scrolled {
+
+      border-color:
+
+        rgba(0, 75, 141, 0.10);
+
+      box-shadow:
+
+        0 10px 35px
+
+        rgba(0, 75, 141, 0.07);
+
+    }
+
+
+    .screen-frame {
+
+      transition:
+
+        transform 0.45s ease,
+
+        box-shadow 0.45s ease;
+
+    }
+
+
+    .screen-frame:hover {
+
+      transform:
+
+        translateY(-5px);
+
+      box-shadow:
+
+        0 34px 85px
+
+        rgba(0, 75, 141, 0.17);
+
+    }
+
+
+    .feature-card {
+
+      transition:
+
+        transform 0.3s ease,
+
+        box-shadow 0.3s ease,
+
+        border-color 0.3s ease;
+
+    }
+
+
+    .feature-card:hover {
+
+      transform:
+
+        translateY(-4px);
+
+      border-color:
+
+        rgba(0, 120, 200, 0.28);
+
+      box-shadow:
+
+        0 18px 45px
+
+        rgba(0, 75, 141, 0.09);
+
+    }
+
+
+    .number-line {
+
+      background:
+
+        linear-gradient(
+
+          90deg,
+
+          #0078C8,
+
+          rgba(0, 120, 200, 0.12)
+
+        );
+
+    }
+
+
+    @media (
+
+      prefers-reduced-motion: reduce
+
+    ) {
+
+      html {
+
+        scroll-behavior: auto;
+
+      }
+
+
+      .reveal {
+
+        opacity: 1;
+
+        transform: none;
+
+        transition: none;
+
+      }
+
+
+      .screen-frame,
+
+      .feature-card {
+
+        transition: none;
+
+      }
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+
+  <header
+id="navbar"
+
+class="fixed top-0 left-0 right-0 z-50 border-b border-transparent bg-ivory/90 backdrop-blur-xl transition-all duration-300"
+
+>
+<div
+
+  class="max-w-[1260px] mx-auto px-6"
+
+>
+
+  <div
+
+    class="h-20 flex items-center justify-between"
+
+  >
+
+
+    <a
+
+      href="index.html"
+
+      class="flex items-center gap-3"
+
+      aria-label="Back to internal portfolio"
+
+    >
+
+      <span
+
+        class="flex w-10 h-10 items-center justify-center rounded-xl bg-marutiDark text-sm font-semibold text-white"
+
+      >
+
+        SM
+
+      </span>
+
+
+      <div>
+
+        <p
+
+          class="text-sm font-semibold text-charcoal"
+
+        >
+
+          Product Design
+
+        </p>
+
+
+        <p
+
+          class="text-xs text-charcoal/45"
+
+        >
+
+          Internal portfolio
+
+        </p>
+
+      </div>
+
+    </a>
+
+
+    <div
+
+      class="hidden sm:flex items-center gap-5"
+
+    >
+
+      <a
+
+        href="index.html#projects"
+
+        class="text-sm text-charcoal/55 transition-colors hover:text-maruti"
+
+      >
+
+        All projects
+
+      </a>
+
+
+      <span
+
+        class="rounded-full border border-red/15 bg-red/5 px-4 py-2 text-xs font-medium text-redDark"
+
+      >
+
+        Internal use only
+
+      </span>
+
+    </div>
+
+  </div>
+
+</div>
+  </header>
+
+  <main>
+<!-- Hero -->
+
+
+<section
+
+  class="hero-pattern relative overflow-hidden pt-20"
+
+>
+
+  <div
+
+    class="max-w-[1260px] mx-auto px-6 pt-20 pb-24 lg:pt-28 lg:pb-32"
+
+  >
+
+    <div
+
+      class="grid lg:grid-cols-12 gap-14 lg:gap-20 items-center"
+
+    >
+
+
+      <!-- Hero Content -->
+
+
+      <div
+
+        class="lg:col-span-7"
+
+      >
+
+        <div
+
+          class="reveal inline-flex items-center gap-3 rounded-full border border-maruti/10 bg-paper/85 px-4 py-2"
+
+        >
+
+          <span
+
+            class="w-2 h-2 rounded-full bg-red"
+
+          ></span>
+
+
+          <span
+
+            class="text-xs font-semibold uppercase tracking-[0.15em] text-marutiDark/60"
+
+          >
+
+            Dealer operations · Service experience
+
+          </span>
+
+        </div>
+
+
+        <p
+
+          class="reveal mt-9 text-sm font-semibold text-marutiBright"
+
+        >
+
+          Service marketplace
+
+        </p>
+
+
+        <h1
+
+          class="display-font reveal mt-5 max-w-4xl text-5xl sm:text-6xl lg:text-[76px] leading-[0.96] tracking-[-0.045em] text-marutiDark"
+
+        >
+
+          One place to discover,
+
+          <span class="text-marutiBright">
+
+            compare and manage
+
+          </span>
+
+          dealer services.
+
+        </h1>
+
+
+        <p
+
+          class="reveal mt-9 max-w-2xl text-lg sm:text-xl leading-relaxed text-charcoal/60"
+
+        >
+
+          A unified service marketplace
+          designed to help dealer teams
+          find the right operational
+          services, understand value,
+          and move from discovery
+          to action with less effort.
+
+        </p>
+
+
+        <div
+
+          class="reveal mt-10 flex flex-wrap gap-3"
+
+        >
+
+          <a
+
+            href="#solution"
+
+            class="rounded-full bg-marutiDark px-6 py-3.5 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-1 hover:bg-maruti"
+
+          >
+
+            View the solution
+
+          </a>
+
+
+          <a
+
+            href="#impact"
+
+            class="rounded-full border border-maruti/15 bg-paper px-6 py-3.5 text-sm font-medium text-marutiDark transition-colors hover:bg-marutiDark hover:text-white"
+
+          >
+
+            View impact
+
+          </a>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- Project Overview -->
+
+
+      <aside
+
+        class="reveal lg:col-span-5"
+
+      >
+
+        <div
+
+          class="rounded-[32px] border border-maruti/10 bg-paper/90 p-7 sm:p-8 shadow-soft"
+
+        >
+
+          <div
+
+            class="flex items-center justify-between"
+
+          >
+
+            <p
+
+              class="text-xs uppercase tracking-[0.16em] text-charcoal/40"
+
+            >
+
+              Project overview
+
+            </p>
+
+
+            <span
+
+              class="flex w-10 h-10 items-center justify-center rounded-xl bg-marutiLight text-maruti"
+
+            >
+
+              <svg
+
+                width="20"
+
+                height="20"
+
+                viewBox="0 0 24 24"
+
+                fill="none"
+
+                stroke="currentColor"
+
+                stroke-width="1.7"
+
+              >
+
+                <path d="M4 7h16"></path>
+
+                <path d="M6 3h12v18H6z"></path>
+
+                <path d="M9 11h6"></path>
+
+                <path d="M9 15h4"></path>
+
+              </svg>
+
+            </span>
+
+          </div>
+
+
+          <div
+
+            class="mt-8 grid grid-cols-2 gap-x-7 gap-y-8"
+
+          >
+
+            <div>
+
+              <p class="text-xs text-charcoal/45">
+
+                Role
+
+              </p>
+
+              <p class="mt-1 text-sm font-medium">
+
+                Product Designer
+
+              </p>
+
+            </div>
+
+
+            <div>
+
+              <p class="text-xs text-charcoal/45">
+
+                Product
+
+              </p>
+
+              <p class="mt-1 text-sm font-medium">
+
+                Service marketplace
+
+              </p>
+
+            </div>
+
+
+            <div>
+
+              <p class="text-xs text-charcoal/45">
+
+                Users
+
+              </p>
+
+              <p class="mt-1 text-sm font-medium">
+
+                Dealer teams
+
+              </p>
+
+            </div>
+
+
+            <div>
+
+              <p class="text-xs text-charcoal/45">
+
+                Scope
+
+              </p>
+
+              <p class="mt-1 text-sm font-medium">
+
+                End-to-end UX
+
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div
+
+            class="mt-8 border-t border-maruti/10 pt-7"
+
+          >
+
+            <p class="text-xs text-charcoal/45">
+
+              My contribution
+
+            </p>
+
+
+            <p
+
+              class="mt-2 text-sm leading-relaxed font-medium text-charcoal/75"
+
+            >
+
+              User flows, information
+              architecture, interaction
+              design, prototypes,
+              and usability validation.
+
+            </p>
+
+          </div>
+
+        </div>
+
+      </aside>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- Challenge -->
+
+
+<section
+
+  class="bg-paper py-24 sm:py-32"
+
+>
+
+  <div
+
+    class="max-w-[1080px] mx-auto px-6"
+
+  >
+
+    <div
+
+      class="grid lg:grid-cols-[0.8fr_1.2fr] gap-12 lg:gap-20"
+
+    >
+
+      <div class="reveal">
+
+        <p
+
+          class="text-sm font-semibold text-marutiBright"
+
+        >
+
+          The challenge
+
+        </p>
+
+
+        <h2
+
+          class="display-font mt-4 text-4xl sm:text-5xl leading-tight text-marutiDark"
+
+        >
+
+          Finding a service
+
+          should not feel
+
+          like finding a file.
+
+        </h2>
+
+      </div>
+
+
+      <div class="reveal">
+
+        <p
+
+          class="text-xl sm:text-2xl leading-relaxed text-charcoal/65"
+
+        >
+
+          Dealer teams had to navigate
+          disconnected information,
+          understand different service
+          offerings, and rely on
+          multiple channels before
+          deciding what to use.
+
+        </p>
+
+
+        <div
+
+          class="mt-10 border-l-2 border-red pl-6"
+
+        >
+
+          <p
+
+            class="text-xs font-semibold uppercase tracking-[0.15em] text-redDark"
+
+          >
+
+            Opportunity
+
+          </p>
+
+
+          <p
+
+            class="mt-3 text-xl sm:text-2xl font-medium leading-snug text-marutiDark"
+
+          >
+
+            Turn fragmented service
+            information into a clear,
+            searchable, action-oriented
+            marketplace.
+
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- What I Designed -->
+
+
+<section
+
+  class="grid-texture bg-ivory py-24 sm:py-32"
+
+>
+
+  <div
+
+    class="max-w-[1260px] mx-auto px-6"
+
+  >
+
+    <div
+
+      class="max-w-3xl reveal"
+
+    >
+
+      <p
+
+        class="text-sm font-semibold text-marutiBright"
+
+      >
+
+        What I designed
+
+      </p>
+
+
+      <h2
+
+        class="display-font mt-4 text-4xl sm:text-5xl text-marutiDark"
+
+      >
+
+        A marketplace built around
+
+        how dealer teams work.
+
+      </h2>
+
+    </div>
+
+
+    <div
+
+      class="mt-14 grid md:grid-cols-3 gap-5"
+
+    >
+
+
+      <article
+
+        class="feature-card reveal rounded-[28px] border border-maruti/10 bg-paper p-8 shadow-card"
+
+      >
+
+        <div
+
+          class="flex w-12 h-12 items-center justify-center rounded-2xl bg-marutiLight text-maruti"
+
+        >
+
+          <svg
+
+            width="23"
+
+            height="23"
+
+            viewBox="0 0 24 24"
+
+            fill="none"
+
+            stroke="currentColor"
+
+            stroke-width="1.7"
+
+          >
+
+            <circle
+
+              cx="11"
+
+              cy="11"
+
+              r="6"
+
+            ></circle>
+
+            <path
+
+              d="m16 16 4 4"
+
+            ></path>
+
+          </svg>
+
+        </div>
+
+
+        <p
+
+          class="mt-8 text-xs font-semibold text-marutiBright"
+
+        >
+
+          01
+
+        </p>
+
+
+        <h3
+
+          class="mt-3 text-2xl font-medium text-marutiDark"
+
+        >
+
+          Discover
+
+        </h3>
+
+
+        <p
+
+          class="mt-4 text-sm leading-relaxed text-charcoal/55"
+
+        >
+
+          Clear categories and search
+          help teams find relevant
+          services without navigating
+          multiple systems.
+
+        </p>
+
+      </article>
+
+
+
+      <article
+
+        class="feature-card reveal rounded-[28px] border border-maruti/10 bg-paper p-8 shadow-card"
+
+      >
+
+        <div
+
+          class="flex w-12 h-12 items-center justify-center rounded-2xl bg-sky text-maruti"
+
+        >
+
+          <svg
+
+            width="23"
+
+            height="23"
+
+            viewBox="0 0 24 24"
+
+            fill="none"
+
+            stroke="currentColor"
+
+            stroke-width="1.7"
+
+          >
+
+            <path d="M4 6h16"></path>
+
+            <path d="M4 12h16"></path>
+
+            <path d="M4 18h10"></path>
+
+          </svg>
+
+        </div>
+
+
+        <p
+
+          class="mt-8 text-xs font-semibold text-marutiBright"
+
+        >
+
+          02
+
+        </p>
+
+
+        <h3
+
+          class="mt-3 text-2xl font-medium text-marutiDark"
+
+        >
+
+          Understand
+
+        </h3>
+
+
+        <p
+
+          class="mt-4 text-sm leading-relaxed text-charcoal/55"
+
+        >
+
+          Service information is
+          structured around benefits,
+          requirements, and practical
+          next steps.
+
+        </p>
+
+      </article>
+
+
+
+      <article
+
+        class="feature-card reveal rounded-[28px] border border-maruti/10 bg-paper p-8 shadow-card"
+
+      >
+
+        <div
+
+          class="flex w-12 h-12 items-center justify-center rounded-2xl bg-red/5 text-red"
+
+        >
+
+          <svg
+
+            width="23"
+
+            height="23"
+
+            viewBox="0 0 24 24"
+
+            fill="none"
+
+            stroke="currentColor"
+
+            stroke-width="1.7"
+
+          >
+
+            <path d="M5 12h14"></path>
+
+            <path d="m13 6 6 6-6 6"></path>
+
+          </svg>
+
+        </div>
+
+
+        <p
+
+          class="mt-8 text-xs font-semibold text-redDark"
+
+        >
+
+          03
+
+        </p>
+
+
+        <h3
+
+          class="mt-3 text-2xl font-medium text-marutiDark"
+
+        >
+
+          Take action
+
+        </h3>
+
+
+        <p
+
+          class="mt-4 text-sm leading-relaxed text-charcoal/55"
+
+        >
+
+          Clear calls to action help
+          users move from service
+          discovery to the next
+          operational step.
+
+        </p>
+
+      </article>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- Selected Solution -->
+
+
+<!-- SELECTED SOLUTION -->
+
+<section
+  id="selected-solution"
+  class="relative overflow-hidden bg-[#F7F4EF] py-24 sm:py-32"
+>
+
+  <div
+    class="absolute inset-0 opacity-[0.24]"
+    style="
+      background-image:
+      linear-gradient(
+        rgba(35, 31, 32, 0.035) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        rgba(35, 31, 32, 0.035) 1px,
+        transparent 1px
+      );
+      background-size: 48px 48px;
+    "
+  ></div>
+
+  <div
+    class="relative mx-auto max-w-[1260px] px-6"
+  >
+
+<!-- SECTION INTRO -->
+
+
+<div
+  class="grid items-end gap-10 lg:grid-cols-12"
+>
+
+
+  <div
+    class="lg:col-span-7"
+  >
+
+    <div
+      class="reveal inline-flex items-center gap-3 rounded-full border border-[#E31E24]/15 bg-white px-4 py-2 shadow-sm"
+    >
+
+      <span
+        class="h-2 w-2 rounded-full bg-[#E31E24]"
+      ></span>
+
+
+      <span
+        class="text-xs font-semibold uppercase tracking-[0.16em] text-marutiDark"
+      >
+
+        Selected solution
+
+      </span>
+
+    </div>
+
+
+    <h2
+      class="reveal mt-6 max-w-4xl font-serif text-4xl leading-[1.06] tracking-[-0.035em] text-marutiDark sm:text-5xl lg:text-6xl"
+    >
+
+      Find the right service.
+
+      <span
+        class="text-marutiBright"
+      >
+
+        Book with confidence.
+
+      </span>
+
+    </h2>
+
+  </div>
+
+
+  <div
+    class="reveal lg:col-span-5 lg:pb-1"
+  >
+
+    <p class="max-w-md text-base leading-relaxed text-black/60 sm:text-lg">
+
+      The marketplace brings service discovery, package comparison and booking into one simple journey for dealership customers.
+    </p>
+
+  </div>
+
+</div>
+
+
+
+<!-- MAIN SCREEN SHOWCASE -->
+
+
+<div
+  class="reveal mt-14"
+>
+
+  <div
+    class="rounded-[32px] border border-[#231F20]/10 bg-white p-3 shadow-[0_25px_75px_rgba(35,31,32,0.10)] sm:p-5"
+  >
+
+
+    <!-- SCREEN AREA -->
+
+
+    <div
+      class="relative min-h-[500px] overflow-hidden rounded-[25px] border border-[#231F20]/5 bg-[#F7F4EF] sm:min-h-[680px]"
+    >
+
+
+      <!-- MARUTI SERVICE MARKETPLACE SCREEN -->
+
+
+      <img
+        id="marutiServiceScreen"
+        src="https://muxdesigns.co.in/wp-content/uploads/2025/03/Mass-desktop-active-home-MVP-2.0-4-1-1024x810.jpg"
+        alt="Maruti service marketplace screen 1"
+        class="absolute inset-0 z-10 h-full w-full object-contain opacity-100 transition-opacity duration-300"
+      >
+
+
+      <!-- SCREEN LABEL -->
+
+
+      <div
+        class="absolute left-5 top-5 z-20 sm:left-7 sm:top-7"
+      >
+
+        <div
+          class="flex items-center gap-3 rounded-full border border-[#231F20]/10 bg-white/95 px-4 py-2.5 shadow-md backdrop-blur-md"
+        >
+
+          <span
+            id="marutiScreenNumber"
+            class="flex h-6 w-6 items-center justify-center rounded-full bg-[#E31E24] text-[10px] font-bold text-white"
+          >
+
+            01
+
+          </span>
+
+
+          <span
+            id="marutiScreenTitle"
+            class="text-xs font-semibold text-[#231F20]"
+          >
+
+            Explore services
+
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- SCREEN COUNTER -->
+
+
+      <div
+        class="absolute bottom-5 right-5 z-20 rounded-full border border-[#231F20]/10 bg-white/95 px-4 py-2 text-xs font-medium text-[#231F20]/60 shadow-sm backdrop-blur-md sm:bottom-7 sm:right-7"
+      >
+
+        <span
+          id="currentMarutiScreen"
+        >
+
+          1
+
+        </span>
+
+        /
+
+        <span
+          id="totalMarutiScreens"
+        >
+
+          5
+
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- SCREEN DESCRIPTION AND CONTROLS -->
+
+
+  <div
+    class="mt-6 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between"
+  >
+
+
+    <div
+      class="max-w-xl"
+    >
+
+      <p
+        class="text-xs font-semibold uppercase tracking-[0.15em] text-marutiDark/60"
+      >
+
+        What this screen does
+
+      </p>
+
+
+      <p
+        id="marutiScreenDescription"
+        class="mt-2 text-sm leading-relaxed text-[#231F20]/55"
+      >
+
+        Customers can explore
+        relevant vehicle services
+        and begin their booking
+        journey.
+
+      </p>
+
+    </div>
+
+
+    <!-- PREVIOUS AND NEXT -->
+
+
+    <div
+      class="flex shrink-0 items-center gap-3"
+    >
+
+
+      <button
+        id="previousMarutiScreen"
+        type="button"
+        aria-label="Show previous service marketplace screen"
+        class="flex h-11 w-11 items-center justify-center rounded-full border border-[#231F20]/10 bg-white text-[#231F20] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#E31E24]/35 hover:text-[#E31E24] disabled:cursor-not-allowed disabled:opacity-30"
+      >
+
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          aria-hidden="true"
+        >
+
+          <path
+            d="m15 18-6-6 6-6"
+          ></path>
+
+        </svg>
+
+      </button>
+
+
+      <button
+        id="nextMarutiScreen"
+        type="button"
+        aria-label="Show next service marketplace screen"
+        class="flex h-11 w-11 items-center justify-center rounded-full bg-[#231F20] text-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#E31E24] disabled:cursor-not-allowed disabled:opacity-30"
+      >
+
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          aria-hidden="true"
+        >
+
+          <path
+            d="m9 18 6-6-6-6"
+          ></path>
+
+        </svg>
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- KEY SOLUTION FEATURES -->
+
+
+<div
+  class="mt-10 grid gap-4 md:grid-cols-3"
+>
+
+
+  <article
+    class="reveal rounded-[24px] border border-[#231F20]/10 bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#E31E24]/35 hover:shadow-[0_18px_45px_rgba(35,31,32,0.08)]"
+  >
+
+    <div
+      class="flex items-center gap-4"
+    >
+
+      <span
+        class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#E31E24]/15 bg-[#F7F4EF] text-sm font-bold text-[#E31E24]"
+      >
+
+        01
+
+      </span>
+
+
+      <div>
+
+        <p
+          class="text-sm font-semibold text-[#231F20]"
+        >
+
+          Easy discovery
+
+        </p>
+
+
+        <p
+          class="mt-1 text-xs leading-relaxed text-[#231F20]/50"
+        >
+
+          Customers find relevant
+          services without
+          navigating complex menus.
+
+        </p>
+
+      </div>
+
+    </div>
+
+  </article>
+
+
+
+  <article
+    class="reveal rounded-[24px] border border-[#231F20]/10 bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#E31E24]/35 hover:shadow-[0_18px_45px_rgba(35,31,32,0.08)]"
+  >
+
+    <div
+      class="flex items-center gap-4"
+    >
+
+      <span
+        class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#E31E24]/15 bg-[#F7F4EF] text-sm font-bold text-[#E31E24]"
+      >
+
+        02
+
+      </span>
+
+
+      <div>
+
+        <p
+          class="text-sm font-semibold text-[#231F20]"
+        >
+
+          Clear comparison
+
+        </p>
+
+
+        <p
+          class="mt-1 text-xs leading-relaxed text-[#231F20]/50"
+        >
+
+          Service details and
+          package benefits are
+          easy to understand.
+
+        </p>
+
+      </div>
+
+    </div>
+
+  </article>
+
+
+
+  <article
+    class="reveal rounded-[24px] border border-[#231F20]/10 bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#E31E24]/35 hover:shadow-[0_18px_45px_rgba(35,31,32,0.08)]"
+  >
+
+    <div
+      class="flex items-center gap-4"
+    >
+
+      <span
+        class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#E31E24]/15 bg-[#F7F4EF] text-sm font-bold text-[#E31E24]"
+      >
+
+        03
+
+      </span>
+
+
+      <div>
+
+        <p
+          class="text-sm font-semibold text-[#231F20]"
+        >
+
+          Simple booking
+
+        </p>
+
+
+        <p
+          class="mt-1 text-xs leading-relaxed text-[#231F20]/50"
+        >
+
+          Customers select a
+          service and complete
+          the booking smoothly.
+
+        </p>
+
+      </div>
+
+    </div>
+
+  </article>
+
+</div>
+
+
+
+<!-- DESIGN PRINCIPLE -->
+
+
+
+
+  </div>
+
+</section>
+
+<script>
+
+  const marutiServiceScreens = [
+
+    {
+
+      image:"images/maruti/mass-screen-01.jpg",
+
+      title:"Service Visibility",
+
+      description:"Service Plan Visibility by Status"
+
+    },
+
+    {
+
+      image:"images/maruti/mass-screen-02.jpg",
+
+      title:"Right chart for the right insight",
+
+      description:"Adaptive Performance Visualization"
+
+    },
+
+    {
+
+      image:"images/maruti/mass-screen-03.jpg",
+
+      title:"At-a-glance control for informed decisions",
+
+      description:"MSIL Admin Dashboard"
+
+    },
+
+    {
+
+      image:"images/maruti/mass-screen-04.jpg",
+
+      title:"Track usage anytime, on any device",
+
+      description:"Responsive Service Usage Status"
+
+    },
+
+    {
+
+      image:"images/maruti/mass-screen-05.jpg",
+
+      title:"Manage Requests",
+
+      description:"MSIL Admin Manage Requests"
+
+    }
+
+  ];
+
+
+  let activeMarutiScreen = 0;
+
+
+  const marutiServiceScreen = document.getElementById("marutiServiceScreen");
+
+  const marutiScreenNumber = document.getElementById("marutiScreenNumber");
+
+  const marutiScreenTitle = document.getElementById("marutiScreenTitle");
+
+  const marutiScreenDescription = document.getElementById("marutiScreenDescription");
+
+  const currentMarutiScreen = document.getElementById("currentMarutiScreen");
+
+  const totalMarutiScreens =document.getElementById("totalMarutiScreens");
+
+  const previousMarutiScreen = document.getElementById("previousMarutiScreen");
+
+  const nextMarutiScreen = document.getElementById("nextMarutiScreen");
+
+  totalMarutiScreens.textContent = marutiServiceScreens.length;
+
+
+  function updateMarutiScreen() {
+
+    const screen = marutiServiceScreens[activeMarutiScreen];
+
+
+    marutiServiceScreen.classList.add("opacity-0");
+
+
+    setTimeout(
+
+      () => {
+
+        marutiServiceScreen.src = screen.image;
+
+
+       // marutiServiceScreen.alt = Maruti service marketplace screen ${activeMarutiScreen + 1};
+
+
+        marutiScreenNumber.textContent = String(activeMarutiScreen + 1
+
+          ).padStart(
+
+            2,
+
+            "0"
+
+          );
+
+
+        marutiScreenTitle.textContent =
+
+          screen.title;
+
+
+        marutiScreenDescription.textContent =
+
+          screen.description;
+
+
+        currentMarutiScreen.textContent =
+
+          activeMarutiScreen + 1;
+
+
+        previousMarutiScreen.disabled =
+
+          activeMarutiScreen === 0;
+
+
+        nextMarutiScreen.disabled =
+
+          activeMarutiScreen ===
+
+          marutiServiceScreens.length - 1;
+
+
+        marutiServiceScreen.classList.remove(
+
+          "opacity-0"
+
+        );
+
+      },
+
+      180
+
+    );
+
+  }
+
+
+  previousMarutiScreen.addEventListener(
+
+    "click",
+
+    () => {
+
+      if (
+
+        activeMarutiScreen > 0
+
+      ) {
+
+        activeMarutiScreen--;
+
+        updateMarutiScreen();
+
+      }
+
+    }
+
+  );
+
+
+  nextMarutiScreen.addEventListener(
+
+    "click",
+
+    () => {
+
+      if (
+
+        activeMarutiScreen <
+
+        marutiServiceScreens.length - 1
+
+      ) {
+
+        activeMarutiScreen++;
+
+        updateMarutiScreen();
+
+      }
+
+    }
+
+  );
+
+
+  updateMarutiScreen();
+
+</script>
+
+
+
+
+<!-- Impact -->
+
+
+<section
+
+  id="impact"
+
+  class="bg-paper py-24 sm:py-32"
+
+>
+
+  <div
+
+    class="max-w-[1080px] mx-auto px-6"
+
+  >
+
+    <div
+
+      class="text-center reveal"
+
+    >
+
+      <p
+
+        class="text-sm font-semibold text-marutiBright"
+
+      >
+
+        Design impact
+
+      </p>
+
+
+      <h2
+
+        class="display-font mx-auto mt-4 max-w-4xl text-4xl sm:text-6xl leading-tight text-marutiDark"
+
+      >
+
+        A clearer path from
+
+        service need to action.
+
+      </h2>
+
+    </div>
+
+
+    <div
+
+      class="mt-14 grid md:grid-cols-3 gap-5"
+
+    >
+
+      <article
+
+        class="reveal rounded-3xl border border-maruti/10 bg-ivory p-8"
+
+      >
+
+        <div
+
+          class="h-1 w-16 rounded-full number-line"
+
+        ></div>
+
+
+        <h3
+
+          class="mt-7 text-xl font-medium text-marutiDark"
+
+        >
+
+          Reduced discovery effort
+
+        </h3>
+
+
+        <p
+
+          class="mt-3 text-sm leading-relaxed text-charcoal/55"
+
+        >
+
+          A central marketplace
+          reduces the need to search
+          across disconnected
+          channels.
+
+        </p>
+
+      </article>
+
+
+      <article
+
+        class="reveal rounded-3xl border border-maruti/10 bg-ivory p-8"
+
+      >
+
+        <div
+
+          class="h-1 w-16 rounded-full number-line"
+
+        ></div>
+
+
+        <h3
+
+          class="mt-7 text-xl font-medium text-marutiDark"
+
+        >
+
+          More informed choices
+
+        </h3>
+
+
+        <p
+
+          class="mt-3 text-sm leading-relaxed text-charcoal/55"
+
+        >
+
+          Consistent service
+          information helps teams
+          understand options
+          before acting.
+
+        </p>
+
+      </article>
+
+
+      <article
+
+        class="reveal rounded-3xl border border-maruti/10 bg-ivory p-8"
+
+      >
+
+        <div
+
+          class="h-1 w-16 rounded-full number-line"
+
+        ></div>
+
+
+        <h3
+
+          class="mt-7 text-xl font-medium text-marutiDark"
+
+        >
+
+          A scalable foundation
+
+        </h3>
+
+
+        <p
+
+          class="mt-3 text-sm leading-relaxed text-charcoal/55"
+
+        >
+
+          A consistent marketplace
+          model can support
+          additional services
+          over time.
+
+        </p>
+
+      </article>
+
+    </div>
+
+
+    <div
+
+      class="reveal mt-8 rounded-[30px] border border-maruti/10 bg-marutiLight p-8 sm:p-10"
+
+    >
+
+      <p
+
+        class="text-xs font-semibold uppercase tracking-[0.15em] text-marutiBright"
+
+      >
+
+        Design takeaway
+
+      </p>
+
+
+      <p
+
+        class="display-font mt-5 max-w-4xl text-3xl sm:text-4xl leading-tight text-marutiDark"
+
+      >
+
+        Enterprise marketplaces work
+        best when they organise
+        complexity around the user's
+        next decision—not the
+        organisation's internal structure.
+
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- Confidentiality -->
+
+
+<section
+
+  class="bg-sky py-14"
+
+>
+
+  <div
+
+    class="max-w-[1080px] mx-auto px-6"
+
+  >
+
+    <div
+
+      class="flex flex-col sm:flex-row gap-6 items-start"
+
+    >
+
+      <div
+
+        class="flex w-12 h-12 shrink-0 items-center justify-center rounded-2xl bg-red text-white"
+
+      >
+
+        <svg
+
+          width="22"
+
+          height="22"
+
+          viewBox="0 0 24 24"
+
+          fill="none"
+
+          stroke="currentColor"
+
+          stroke-width="1.8"
+
+        >
+
+          <rect
+
+            x="4"
+
+            y="10"
+
+            width="16"
+
+            height="10"
+
+            rx="2"
+
+          ></rect>
+
+          <path
+
+            d="M8 10V7a4 4 0 0 1 8 0v3"
+
+          ></path>
+
+        </svg>
+
+      </div>
+
+
+      <div>
+
+        <p
+
+          class="text-sm font-semibold text-redDark"
+
+        >
+
+          Internal confidentiality notice
+
+        </p>
+
+
+        <p
+
+          class="mt-2 max-w-4xl text-sm leading-relaxed text-charcoal/60"
+
+        >
+
+          This case study contains
+          internal project information
+          and is intended only for
+          authorised NTT review.
+          Product visuals, workflows,
+          and project details must
+          not be copied, shared, or
+          distributed outside approved
+          internal channels.
+
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+  </main>
+
+  <!-- Footer -->
+
+  <footer
+class="bg-marutiDark py-8 text-white/45"
+>
+<div
+
+  class="max-w-[1260px] mx-auto px-6 flex flex-col sm:flex-row justify-between gap-4 text-xs"
+
+>
+
+  <p>
+
+    Internal Product Design Portfolio
+
+  </p>
+
+
+  <a
+
+    href="index.html"
+
+    class="transition-colors hover:text-white"
+
+  >
+
+    ← Back to projects
+
+  </a>
+
+</div>
+
+  </footer>
+
+  <script>
+
+
+    const navbar =
+
+      document.getElementById(
+
+        "navbar"
+
+      );
+
+
+    window.addEventListener(
+
+      "scroll",
+
+      () => {
+
+        if (
+
+          window.scrollY > 20
+
+        ) {
+
+          navbar.classList.add(
+
+            "nav-scrolled"
+
+          );
+
+        }
+
+        else {
+
+          navbar.classList.remove(
+
+            "nav-scrolled"
+
+          );
+
+        }
+
+      }
+
+    );
+
+
+
+    const observer =
+
+      new IntersectionObserver(
+
+        (entries) => {
+
+          entries.forEach(
+
+            (entry) => {
+
+              if (
+
+                entry.isIntersecting
+
+              ) {
+
+                entry.target.classList.add(
+
+                  "visible"
+
+                );
+
+
+                observer.unobserve(
+
+                  entry.target
+
+                );
+
+              }
+
+            }
+
+          );
+
+        },
+
+        {
+
+          threshold: 0.12
+
+        }
+
+      );
+
+
+    document
+
+      .querySelectorAll(
+
+        ".reveal"
+
+      )
+
+      .forEach(
+
+        (element) => {
+
+          observer.observe(
+
+            element
+
+          );
+
+        }
+
+      );
+
+
+  </script>
+
+</body>
+
+</html>

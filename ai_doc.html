@@ -1,0 +1,2273 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Document Generation | Internal UX Case Study</title>
+<meta name="description" content="Internal UX case study for an AI-assisted enterprise document generation workflow.">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+
+    tailwind.config = {
+
+      theme: {
+
+        extend: {
+
+          colors: {
+
+            ink: "#22211F",
+
+            cream: "#F4EFE7",
+
+            paper: "#FFFDF9",
+
+            sand: "#E7DDD0",
+
+            clay: "#B65E47",
+
+            rust: "#8B4434",
+
+            moss: "#667063",
+
+            mist: "#E8ECE5"
+
+          },
+
+          boxShadow: {
+
+            soft:
+              "0 18px 55px rgba(42, 34, 27, 0.08)",
+
+            screen:
+              "0 28px 80px rgba(42, 34, 27, 0.13)"
+
+          }
+
+        }
+
+      }
+
+    }
+
+  </script>
+
+  <style>
+
+    html {
+
+      scroll-behavior: smooth;
+
+    }
+
+
+    body {
+
+      font-family:
+
+        Inter,
+
+        ui-sans-serif,
+
+        system-ui,
+
+        -apple-system,
+
+        BlinkMacSystemFont,
+
+        "Segoe UI",
+
+        sans-serif;
+
+      background: #F4EFE7;
+
+      color: #22211F;
+
+    }
+
+
+    .editorial-font {
+
+      font-family:
+
+        Georgia,
+
+        "Times New Roman",
+
+        serif;
+
+    }
+
+
+    .hero-noise {
+
+      background-image:
+
+        radial-gradient(
+
+          circle at 15% 15%,
+
+          rgba(182, 94, 71, 0.12),
+
+          transparent 30%
+
+        ),
+
+        radial-gradient(
+
+          circle at 88% 72%,
+
+          rgba(102, 112, 99, 0.11),
+
+          transparent 27%
+
+        );
+
+    }
+
+
+    .reveal {
+
+      opacity: 0;
+
+      transform: translateY(24px);
+
+      transition:
+
+        opacity 0.7s ease,
+
+        transform 0.7s ease;
+
+    }
+
+
+    .reveal.visible {
+
+      opacity: 1;
+
+      transform: translateY(0);
+
+    }
+
+
+    .project-screen {
+
+      transition:
+
+        transform 0.45s ease,
+
+        box-shadow 0.45s ease;
+
+    }
+
+
+    .project-screen:hover {
+
+      transform: translateY(-4px);
+
+      box-shadow:
+
+        0 35px 90px
+
+        rgba(42, 34, 27, 0.16);
+
+    }
+
+
+    .nav-scrolled {
+
+      border-color:
+
+        rgba(34, 33, 31, 0.08);
+
+      box-shadow:
+
+        0 10px 35px
+
+        rgba(42, 34, 27, 0.07);
+
+    }
+
+
+    .capability-card {
+
+      transition:
+
+        transform 0.3s ease,
+
+        border-color 0.3s ease,
+
+        box-shadow 0.3s ease;
+
+    }
+
+
+    .capability-card:hover {
+
+      transform: translateY(-4px);
+
+      border-color:
+
+        rgba(182, 94, 71, 0.25);
+
+      box-shadow:
+
+        0 18px 45px
+
+        rgba(42, 34, 27, 0.08);
+
+    }
+
+
+    @media (
+
+      prefers-reduced-motion: reduce
+
+    ) {
+
+      html {
+
+        scroll-behavior: auto;
+
+      }
+
+
+      .reveal {
+
+        opacity: 1;
+
+        transform: none;
+
+        transition: none;
+
+      }
+
+
+      .project-screen,
+
+      .capability-card {
+
+        transition: none;
+
+      }
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+
+<header id="navbar" class="fixed top-0 left-0 right-0 z-50 border-b border-transparent bg-cream/85 backdrop-blur-xl transition-all duration-300">
+
+<div class="max-w-[1260px] mx-auto px-6">
+
+<div class="h-20 flex items-center justify-between">
+
+
+    <a
+
+      href="index.html"
+
+      class="flex items-center gap-3"
+
+      aria-label="Back to internal portfolio"
+
+    >
+
+      <span
+
+        class="flex w-10 h-10 items-center justify-center rounded-xl bg-ink text-sm font-semibold text-cream"
+
+      >
+
+        SM
+
+      </span>
+
+
+      <div>
+
+        <p
+
+          class="text-sm font-semibold"
+
+        >
+
+          Product Design
+
+        </p>
+
+
+        <p
+
+          class="text-xs text-ink/45"
+
+        >
+
+          Internal portfolio
+
+        </p>
+
+      </div>
+
+    </a>
+
+
+    <div
+
+      class="hidden sm:flex items-center gap-5"
+
+    >
+
+      <a
+
+        href="index.html#projects"
+
+        class="text-sm text-ink/55 transition-colors hover:text-clay"
+
+      >
+
+        All projects
+
+      </a>
+
+
+      <span
+
+        class="rounded-full border border-clay/20 bg-clay/10 px-4 py-2 text-xs font-medium text-rust"
+
+      >
+
+        Confidential
+
+      </span>
+
+    </div>
+
+  </div>
+
+</div>
+
+  </header>
+
+  <main>
+
+<!-- Hero -->
+
+
+<section
+
+  class="hero-noise relative overflow-hidden pt-20"
+
+>
+
+  <div
+
+    class="max-w-[1260px] mx-auto px-6 pt-20 pb-24 lg:pt-28 lg:pb-32"
+
+  >
+
+    <div
+
+      class="grid lg:grid-cols-12 gap-14 items-end"
+
+    >
+
+
+      <!-- Hero Content -->
+
+
+      <div
+
+        class="lg:col-span-8"
+
+      >
+
+        <div
+
+          class="reveal inline-flex items-center gap-3 rounded-full border border-ink/10 bg-paper/80 px-4 py-2"
+
+        >
+
+          <span
+
+            class="w-2 h-2 rounded-full bg-clay"
+
+          ></span>
+
+
+          <span
+
+            class="text-xs font-semibold uppercase tracking-[0.15em] text-ink/55"
+
+          >
+
+            Enterprise AI · Workflow design
+
+          </span>
+
+        </div>
+
+
+        <p
+
+          class="reveal mt-9 text-sm font-semibold text-clay"
+
+        >
+
+          AI document generation
+
+        </p>
+
+
+        <h1
+
+          class="editorial-font reveal max-w-5xl mt-5 text-6xl sm:text-6xl leading-[0.94] tracking-[-0.045em]"
+
+        >
+
+          From a blank brief
+
+          <span class="text-clay">
+
+            to a stronger first draft.
+
+          </span>
+
+        </h1>
+
+
+        <p
+
+          class="reveal max-w-2xl mt-9 text-lg sm:text-xl leading-relaxed text-ink/60"
+
+        >
+
+          Designing an AI-assisted workflow that
+          helps enterprise teams bring together
+          relevant knowledge, create a first draft,
+          and review content with confidence.
+
+        </p>
+
+
+        <div
+
+          class="reveal mt-10 flex flex-wrap gap-3"
+
+        >
+
+          <a
+
+            href="#solution"
+
+            class="rounded-full bg-ink px-6 py-3.5 text-sm font-medium text-cream transition-transform hover:-translate-y-1"
+
+          >
+
+            View the solution
+
+          </a>
+
+
+          <a
+
+            href="#outcome"
+
+            class="rounded-full border border-ink/15 bg-paper px-6 py-3.5 text-sm font-medium transition-colors hover:bg-ink hover:text-cream"
+
+          >
+
+            View outcome
+
+          </a>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- Project Snapshot -->
+
+
+      <aside
+
+        class="reveal lg:col-span-4"
+
+      >
+
+        <div
+
+          class="rounded-[30px] border border-ink/10 bg-paper/90 p-7 shadow-soft"
+
+        >
+
+          <p
+
+            class="text-xs uppercase tracking-[0.16em] text-ink/40"
+
+          >
+
+            Project snapshot
+
+          </p>
+
+
+          <div
+
+            class="mt-7 space-y-6"
+
+          >
+
+            <div>
+
+              <p
+
+                class="text-xs text-ink/45"
+
+              >
+
+                Role
+
+              </p>
+
+
+              <p
+
+                class="mt-1 text-sm font-medium"
+
+              >
+
+                Product Designer
+
+              </p>
+
+            </div>
+
+
+            <div>
+
+              <p
+
+                class="text-xs text-ink/45"
+
+              >
+
+                Team
+
+              </p>
+
+
+              <p
+
+                class="mt-1 text-sm font-medium"
+
+              >
+
+                Product · Engineering · AI/ML
+
+              </p>
+
+            </div>
+
+
+            <div>
+
+              <p
+
+                class="text-xs text-ink/45"
+
+              >
+
+                Contribution
+
+              </p>
+
+
+              <p
+
+                class="mt-1 text-sm leading-relaxed font-medium"
+
+              >
+
+                UX strategy, interaction design,
+                prototypes, and usability testing
+
+              </p>
+
+            </div>
+
+
+            <div
+
+              class="grid grid-cols-2 gap-4 border-t border-ink/10 pt-6"
+
+            >
+
+              <div>
+
+                <p
+
+                  class="text-2xl font-semibold text-clay"
+
+                >
+
+                  6
+
+                </p>
+
+
+                <p
+
+                  class="mt-1 text-xs text-ink/45"
+
+                >
+
+                  Weeks
+
+                </p>
+
+              </div>
+
+
+              <div>
+
+                <p
+
+                  class="text-2xl font-semibold"
+
+                >
+
+                  AI
+
+                </p>
+
+
+                <p
+
+                  class="mt-1 text-xs text-ink/45"
+
+                >
+
+                  Workflow
+
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </aside>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- Challenge -->
+
+
+<section
+
+  class="bg-paper py-24 sm:py-32"
+
+>
+
+  <div
+
+    class="max-w-[1080px] mx-auto px-6"
+
+  >
+
+    <div
+
+      class="grid lg:grid-cols-[0.8fr_1.2fr] gap-12"
+
+    >
+
+      <div
+
+        class="reveal"
+
+      >
+
+        <p
+
+          class="text-sm font-semibold text-clay"
+
+        >
+
+          The challenge
+
+        </p>
+
+
+        <h2
+
+          class="editorial-font mt-4 text-5xl sm:text-5xl leading-tight"
+
+        >
+
+          The work started long before writing.
+
+        </h2>
+
+      </div>
+
+
+      <div
+
+        class="reveal"
+
+      >
+
+        <p
+
+          class="text-xl sm:text-2xl leading-relaxed text-ink/68"
+
+        >
+
+          Teams spent significant time searching
+          across disconnected sources, comparing
+          information, and consulting experts
+          before they could begin creating
+          a document.
+
+        </p>
+
+
+        <div
+
+          class="mt-10 rounded-3xl border border-clay/15 bg-clay/5 p-7 sm:p-8"
+
+        >
+
+          <p
+
+            class="text-xs font-semibold uppercase tracking-[0.15em] text-clay"
+
+          >
+
+            Design principle
+
+          </p>
+
+
+          <p
+
+            class="mt-4 text-2xl sm:text-3xl font-medium leading-snug"
+
+          >
+
+            AI accelerates the work.
+
+            <br>
+
+            People remain accountable
+
+            for the decision.
+
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- Design Approach -->
+
+
+<section
+
+  class="bg-cream py-24 sm:py-32"
+
+>
+
+  <div
+
+    class="max-w-[1260px] mx-auto px-6"
+
+  >
+
+    <div class="w-full reveal">
+
+      <p class="text-sm font-semibold text-clay">Design approach</p>
+
+
+      <h2
+
+        class="editorial-font mt-4 text-5xl sm:text-5xl"
+
+      >
+
+        AI handles the first pass.
+
+        People keep the final say.
+
+      </h2>
+
+    </div>
+
+
+    <div
+
+      class="mt-14 grid md:grid-cols-3 gap-5"
+
+    >
+
+      <article
+
+        class="reveal rounded-[28px] border border-ink/10 bg-paper p-8 shadow-soft"
+
+      >
+
+        <span
+
+          class="text-sm font-semibold text-clay"
+
+        >
+
+          01
+
+        </span>
+
+
+        <h3
+
+          class="mt-8 text-2xl font-medium"
+
+        >
+
+          Find
+
+        </h3>
+
+
+        <p
+
+          class="mt-4 text-sm leading-relaxed text-ink/55"
+
+        >
+
+          Relevant information is brought together
+          from trusted enterprise knowledge sources.
+
+        </p>
+
+      </article>
+
+
+      <article
+
+        class="reveal rounded-[28px] border border-ink/10 bg-paper p-8 shadow-soft"
+
+      >
+
+        <span
+
+          class="text-sm font-semibold text-clay"
+
+        >
+
+          02
+
+        </span>
+
+
+        <h3
+
+          class="mt-8 text-2xl font-medium"
+
+        >
+
+          Generate
+
+        </h3>
+
+
+        <p
+
+          class="mt-4 text-sm leading-relaxed text-ink/55"
+
+        >
+
+          AI creates a structured first draft
+          using the brief, context, and
+          selected information.
+
+        </p>
+
+      </article>
+
+
+      <article
+
+        class="reveal rounded-[28px] border border-ink/10 bg-paper p-8 shadow-soft"
+
+      >
+
+        <span
+
+          class="text-sm font-semibold text-clay"
+
+        >
+
+          03
+
+        </span>
+
+
+        <h3
+
+          class="mt-8 text-2xl font-medium"
+
+        >
+
+          Review
+
+        </h3>
+
+
+        <p
+
+          class="mt-4 text-sm leading-relaxed text-ink/55"
+
+        >
+
+          Users verify, edit, and approve
+          the content before publishing
+          the final document.
+
+        </p>
+
+      </article>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- Selected Solution -->
+
+
+<!-- SELECTED SOLUTION -->
+
+<section
+  id="selected-solution"
+  class="relative overflow-hidden bg-[#F6F3EE] py-24 sm:py-32"
+>
+
+  <div
+    class="absolute inset-0 opacity-[0.28]"
+    style="
+      background-image:
+      linear-gradient(
+        rgba(36, 32, 29, 0.04) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        rgba(36, 32, 29, 0.04) 1px,
+        transparent 1px
+      );
+      background-size: 48px 48px;
+    "
+  ></div>
+
+  <div
+    class="relative mx-auto max-w-[1260px] px-6">
+<!-- SECTION INTRO -->
+
+
+<div class="grid items-end gap-10 lg:grid-cols-12"
+>
+
+
+  <div
+    class="lg:col-span-6"
+  >
+
+    <div
+      class="reveal inline-flex items-center gap-3 rounded-full border border-[#B85C3D]/15 bg-white px-4 py-2 shadow-sm"
+    >
+
+      <span
+        class="h-2 w-2 rounded-full bg-[#B85C3D]"
+      ></span>
+
+
+      <span
+        class="text-xs font-semibold uppercase tracking-[0.16em] text-[#B85C3D]"
+      >
+
+        Selected solution
+
+      </span>
+
+    </div>
+
+
+    <h2
+      class="reveal mt-6 max-w-7xl font-serif text-4xl leading-[1.06] tracking-[-0.035em] text-[#24201D] sm:text-5xl lg:text-5xl"
+    >
+
+      From a simple brief
+
+      <span
+        class="text-[#B85C3D]"
+      >
+
+        to a ready-to-review document.
+
+      </span>
+
+    </h2>
+
+  </div>
+
+
+  <div
+    class="reveal lg:col-span-5 lg:pb-1"
+  >
+
+    <p
+      class="max-w-md text-base leading-relaxed text-[#24201D]/60 sm:text-lg"
+    >
+
+      The workflow helps users
+      define their requirements,
+      guide the AI and review
+      the generated document
+      with confidence.
+
+    </p>
+
+  </div>
+
+</div>
+
+
+
+<!-- MAIN SCREEN SHOWCASE -->
+
+
+<div
+  class="reveal mt-14"
+>
+
+  <div
+    class="rounded-[32px] border border-[#24201D]/10 bg-white p-3 shadow-[0_25px_75px_rgba(42,32,29,0.10)] sm:p-5"
+  >
+
+
+    <!-- SCREEN AREA -->
+
+
+    <div
+      class="relative min-h-[500px] overflow-hidden rounded-[25px] border border-[#24201D]/5 bg-[#F6F3EE] sm:min-h-[680px]"
+    >
+
+
+      <!-- AI DOCUMENT GENERATOR SCREEN -->
+
+
+      <img
+        id="documentScreen"
+        src="assets/ai-document-screen-01.png"
+        alt="AI document generator screen 1"
+        class="absolute inset-0 z-10 h-full w-full object-contain opacity-100 transition-opacity duration-300"
+      >
+
+
+      <!-- SCREEN LABEL -->
+
+
+      <div
+        class="absolute left-5 top-5 z-20 sm:left-7 sm:top-7"
+      >
+
+        <div
+          class="flex items-center gap-3 rounded-full border border-[#24201D]/10 bg-white/95 px-4 py-2.5 shadow-md backdrop-blur-md"
+        >
+
+          <span
+            id="documentScreenNumber"
+            class="flex h-6 w-6 items-center justify-center rounded-full bg-[#B85C3D] text-[10px] font-bold text-white"
+          >
+
+            01
+
+          </span>
+
+
+          <span
+            id="documentScreenTitle"
+            class="text-xs font-semibold text-[#24201D]"
+          >
+
+            Set the brief
+
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- SCREEN COUNTER -->
+
+
+      <div
+        class="absolute bottom-5 right-5 z-20 rounded-full border border-[#24201D]/10 bg-white/95 px-4 py-2 text-xs font-medium text-[#24201D]/60 shadow-sm backdrop-blur-md sm:bottom-7 sm:right-7"
+      >
+
+        <span
+          id="currentDocumentScreen"
+        >
+
+          1
+
+        </span>
+
+        /
+
+        <span
+          id="totalDocumentScreens"
+        >
+
+          6
+
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- SCREEN DESCRIPTION AND CONTROLS -->
+
+
+  <div
+    class="mt-6 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between"
+  >
+
+
+    <div
+      class="max-w-xl"
+    >
+
+      <p
+        class="text-xs font-semibold uppercase tracking-[0.15em] text-[#B85C3D]"
+      >
+
+        What this screen does
+
+      </p>
+
+
+      <p
+        id="documentScreenDescription"
+        class="mt-2 text-sm leading-relaxed text-[#24201D]/55"
+      >
+
+        Users describe what they
+        want to create before
+        starting the AI workflow.
+
+      </p>
+
+    </div>
+
+
+    <!-- PREVIOUS AND NEXT -->
+
+
+    <div
+      class="flex shrink-0 items-center gap-3"
+    >
+
+
+      <button
+        id="previousDocumentScreen"
+        type="button"
+        aria-label="Show previous document generator screen"
+        class="flex h-11 w-11 items-center justify-center rounded-full border border-[#24201D]/10 bg-white text-[#24201D] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#B85C3D]/35 hover:text-[#B85C3D] disabled:cursor-not-allowed disabled:opacity-30"
+      >
+
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          aria-hidden="true"
+        >
+
+          <path
+            d="m15 18-6-6 6-6"
+          ></path>
+
+        </svg>
+
+      </button>
+
+
+      <button
+        id="nextDocumentScreen"
+        type="button"
+        aria-label="Show next document generator screen"
+        class="flex h-11 w-11 items-center justify-center rounded-full bg-[#24201D] text-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#B85C3D] disabled:cursor-not-allowed disabled:opacity-30"
+      >
+
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          aria-hidden="true"
+        >
+
+          <path
+            d="m9 18 6-6-6-6"
+          ></path>
+
+        </svg>
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- KEY SOLUTION FEATURES -->
+
+
+<div
+  class="mt-10 grid gap-4 md:grid-cols-3"
+>
+
+
+  <article
+    class="reveal rounded-[24px] border border-[#24201D]/10 bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#B85C3D]/35 hover:shadow-[0_18px_45px_rgba(42,32,29,0.08)]"
+  >
+
+    <div
+      class="flex items-center gap-4"
+    >
+
+      <span
+        class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#B85C3D]/15 bg-[#F6F3EE] text-sm font-bold text-[#B85C3D]"
+      >
+
+        01
+
+      </span>
+
+
+      <div>
+
+        <p
+          class="text-sm font-semibold text-[#24201D]"
+        >
+
+          Guided input
+
+        </p>
+
+
+        <p
+          class="mt-1 text-xs leading-relaxed text-[#24201D]/50"
+        >
+
+          A clear brief helps
+          users start without
+          facing a blank page.
+
+        </p>
+
+      </div>
+
+    </div>
+
+  </article>
+
+
+
+  <article
+    class="reveal rounded-[24px] border border-[#24201D]/10 bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#B85C3D]/35 hover:shadow-[0_18px_45px_rgba(42,32,29,0.08)]"
+  >
+
+    <div
+      class="flex items-center gap-4"
+    >
+
+      <span
+        class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#B85C3D]/15 bg-[#F6F3EE] text-sm font-bold text-[#B85C3D]"
+      >
+
+        02
+
+      </span>
+
+
+      <div>
+
+        <p
+          class="text-sm font-semibold text-[#24201D]"
+        >
+
+          Controlled generation
+
+        </p>
+
+
+        <p
+          class="mt-1 text-xs leading-relaxed text-[#24201D]/50"
+        >
+
+          Users define the tone,
+          structure and content
+          before generating.
+
+        </p>
+
+      </div>
+
+    </div>
+
+  </article>
+
+
+
+  <article
+    class="reveal rounded-[24px] border border-[#24201D]/10 bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#B85C3D]/35 hover:shadow-[0_18px_45px_rgba(42,32,29,0.08)]"
+  >
+
+    <div
+      class="flex items-center gap-4"
+    >
+
+      <span
+        class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#B85C3D]/15 bg-[#F6F3EE] text-sm font-bold text-[#B85C3D]"
+      >
+
+        03
+
+      </span>
+
+
+      <div>
+
+        <p
+          class="text-sm font-semibold text-[#24201D]"
+        >
+
+          Review before use
+
+        </p>
+
+
+        <p
+          class="mt-1 text-xs leading-relaxed text-[#24201D]/50"
+        >
+
+          Generated content can
+          be reviewed, edited
+          and refined.
+
+        </p>
+
+      </div>
+
+    </div>
+
+  </article>
+
+</div>
+
+
+
+<!-- DESIGN PRINCIPLE -->
+
+
+<div
+  class="reveal mt-8 flex flex-col gap-5 rounded-[26px] border border-[#24201D]/10 bg-white p-7 shadow-[0_12px_35px_rgba(42,32,29,0.05)] sm:flex-row sm:items-center sm:justify-between sm:p-8"
+>
+
+  <div>
+
+    <p
+      class="text-xs font-semibold uppercase tracking-[0.15em] text-[#B85C3D]"
+    >
+
+      Design principle
+
+    </p>
+
+
+    <p
+      class="mt-3 max-w-3xl text-lg font-medium leading-relaxed text-[#24201D] sm:text-xl"
+    >
+
+      AI helps users create
+      the first draft.
+      Users stay in control
+      of the final document.
+
+    </p>
+
+  </div>
+
+
+  <div
+    class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#B85C3D] text-white"
+  >
+
+    <svg
+      width="23"
+      height="23"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.7"
+      aria-hidden="true"
+    >
+
+      <path
+        d="M12 3v18"
+      ></path>
+
+      <path
+        d="M3 12h18"
+      ></path>
+
+    </svg>
+
+  </div>
+
+</div>
+
+  </div>
+
+</section>
+
+<script>
+
+  const documentScreens = [
+
+    {
+      image:"images/ai_doc/ai-document-screen-01.jpg",
+      title:"Set the brief",
+      description:"Users describe what they want to create and provide the information needed to begin."
+
+    },
+
+    {
+
+      image:"images/ai_doc/ai-document-screen-02.jpg",
+      title:"Choose the document type",
+      description:"Users select the document format and structure that best fits their task."
+
+    },
+
+    {
+
+      image:
+        "images/ai_doc/ai-document-screen-03.jpg",
+
+      title:
+        "Set the voice",
+
+      description:
+        "Tone and writing style controls help users guide the generated output."
+
+    },
+
+    {
+
+      image:
+        "images/ai_doc/ai-document-screen-04.jpg",
+
+      title:
+        "Generate the draft",
+
+      description:
+        "The AI turns the selected inputs into a structured first draft."
+
+    },
+
+    {
+
+      image:
+        "images/ai_doc/ai-document-screen-05.png",
+
+      title:
+        "Review and refine",
+
+      description:
+        "Users review the generated content and make changes before finalising it."
+
+    },
+
+    {
+
+      image:"images/ai_doc/ai-document-screen-06.jpg",
+
+      title:"Preview and publish",
+
+      description:"The completed document is checked, approved and prepared for use."
+
+    }
+
+  ];
+
+
+  let activeDocumentScreen = 0;
+
+
+  const documentScreen =
+
+    document.getElementById(
+
+      "documentScreen"
+
+    );
+
+
+  const documentScreenNumber =
+
+    document.getElementById(
+
+      "documentScreenNumber"
+
+    );
+
+
+  const documentScreenTitle =
+
+    document.getElementById(
+
+      "documentScreenTitle"
+
+    );
+
+
+  const documentScreenDescription =
+
+    document.getElementById(
+
+      "documentScreenDescription"
+
+    );
+
+
+  const currentDocumentScreen =
+
+    document.getElementById(
+
+      "currentDocumentScreen"
+
+    );
+
+
+  const totalDocumentScreens =
+
+    document.getElementById(
+
+      "totalDocumentScreens"
+
+    );
+
+
+  const previousDocumentScreen =
+
+    document.getElementById(
+
+      "previousDocumentScreen"
+
+    );
+
+
+  const nextDocumentScreen =
+
+    document.getElementById(
+
+      "nextDocumentScreen"
+
+    );
+
+
+  totalDocumentScreens.textContent =
+
+    documentScreens.length;
+
+
+  function updateDocumentScreen() {
+
+    const screen =
+
+      documentScreens[
+
+        activeDocumentScreen
+
+      ];
+
+
+    documentScreen.classList.add(
+
+      "opacity-0"
+
+    );
+
+
+    setTimeout(
+
+      () => {
+
+        documentScreen.src =
+
+          screen.image;
+
+
+        documentScreen.alt =
+
+          `AI document generator screen ${
+
+            activeDocumentScreen + 1
+
+          }`;
+
+
+        documentScreenNumber.textContent =
+
+          String(
+
+            activeDocumentScreen + 1
+
+          ).padStart(
+
+            2,
+
+            "0"
+
+          );
+
+
+        documentScreenTitle.textContent =
+
+          screen.title;
+
+
+        documentScreenDescription.textContent =
+
+          screen.description;
+
+
+        currentDocumentScreen.textContent =
+
+          activeDocumentScreen + 1;
+
+
+        previousDocumentScreen.disabled =
+
+          activeDocumentScreen === 0;
+
+
+        nextDocumentScreen.disabled =
+
+          activeDocumentScreen ===
+
+          documentScreens.length - 1;
+
+
+        documentScreen.classList.remove(
+
+          "opacity-0"
+
+        );
+
+      },
+
+      180
+
+    );
+
+  }
+
+
+  previousDocumentScreen.addEventListener(
+
+    "click",
+
+    () => {
+
+      if (
+
+        activeDocumentScreen > 0
+
+      ) {
+
+        activeDocumentScreen--;
+
+        updateDocumentScreen();
+
+      }
+
+    }
+
+  );
+
+
+  nextDocumentScreen.addEventListener(
+
+    "click",
+
+    () => {
+
+      if (
+
+        activeDocumentScreen <
+
+        documentScreens.length - 1
+
+      ) {
+
+        activeDocumentScreen++;
+
+        updateDocumentScreen();
+
+      }
+
+    }
+
+  );
+
+
+  updateDocumentScreen();
+
+</script>
+
+
+
+
+<!-- Outcome -->
+
+
+<section
+
+  id="outcome"
+
+  class="bg-cream py-24 sm:py-32"
+
+>
+
+  <div
+
+    class="max-w-[1080px] mx-auto px-6"
+
+  >
+
+    <div
+
+      class="text-center reveal"
+
+    >
+
+      <p
+
+        class="text-sm font-semibold text-clay"
+
+      >
+
+        Outcome
+
+      </p>
+
+
+      <h2
+
+        class="editorial-font mx-auto mt-4 max-w-4xl text-4xl sm:text-6xl leading-tight"
+
+      >
+
+        Less time searching.
+
+        More time improving the document.
+
+      </h2>
+
+    </div>
+
+
+    <div
+
+      class="mt-14 grid md:grid-cols-3 gap-5"
+
+    >
+
+      <article
+
+        class="reveal rounded-3xl border border-ink/10 bg-paper p-8"
+
+      >
+
+        <p
+
+          class="text-xs uppercase tracking-[0.15em] text-ink/40"
+
+        >
+
+          User value
+
+        </p>
+
+
+        <p
+
+          class="mt-5 text-2xl font-medium"
+
+        >
+
+          Faster starting point
+
+        </p>
+
+
+        <p
+
+          class="mt-3 text-sm leading-relaxed text-ink/55"
+
+        >
+
+          Relevant knowledge is surfaced
+          before users begin creating
+          content.
+
+        </p>
+
+      </article>
+
+
+      <article
+
+        class="reveal rounded-3xl border border-ink/10 bg-paper p-8"
+
+      >
+
+        <p
+
+          class="text-xs uppercase tracking-[0.15em] text-ink/40"
+
+        >
+
+          Workflow value
+
+        </p>
+
+
+        <p
+
+          class="mt-5 text-2xl font-medium"
+
+        >
+
+          Less repeated work
+
+        </p>
+
+
+        <p
+
+          class="mt-3 text-sm leading-relaxed text-ink/55"
+
+        >
+
+          Existing enterprise knowledge
+          can be reused instead of
+          recreated.
+
+        </p>
+
+      </article>
+
+
+      <article
+
+        class="reveal rounded-3xl border border-ink/10 bg-paper p-8"
+
+      >
+
+        <p
+
+          class="text-xs uppercase tracking-[0.15em] text-ink/40"
+
+        >
+
+          Trust value
+
+        </p>
+
+
+        <p
+
+          class="mt-5 text-2xl font-medium"
+
+        >
+
+          Human-led approval
+
+        </p>
+
+
+        <p
+
+          class="mt-3 text-sm leading-relaxed text-ink/55"
+
+        >
+
+          Users can review, edit,
+          verify, and approve the
+          final output.
+
+        </p>
+
+      </article>
+
+    </div>
+
+
+    <div class="reveal mt-7 rounded-[30px] bg-ink p-9 sm:p-12 text-cream">
+
+      <p class="text-xs uppercase tracking-[0.15em] text-[#E89A82]">Design learning</p>
+
+
+      <p class="editorial-font mt-5 max-w-4xl text-3xl sm:text-4xl leading-tight">
+
+        In enterprise AI, speed creates value
+        only when people can understand,
+        verify, and remain responsible
+        for the result.
+
+      </p>
+
+    </div>
+	<a
+                        href="index.html#projects"
+                        class="reveal mt-9 inline-flex items-center gap-3 rounded-full bg-sand px-6 py-3.5 text-sm font-medium text-plum transition hover:-translate-y-1 hover:bg-paper"
+                    >
+                        Explore more projects
+
+                        <span> → </span>
+                    </a>
+
+  </div>
+
+</section>
+
+
+
+<!-- Confidentiality Notice -->
+
+
+<section
+
+  class="bg-sand py-14"
+
+>
+
+  <div
+
+    class="max-w-[1080px] mx-auto px-6"
+
+  >
+
+    <div
+
+      class="flex flex-col sm:flex-row gap-6 items-start"
+
+    >
+
+      <div
+
+        class="flex w-12 h-12 shrink-0 items-center justify-center rounded-2xl bg-clay text-paper"
+
+      >
+
+        <svg
+
+          width="22"
+
+          height="22"
+
+          viewBox="0 0 24 24"
+
+          fill="none"
+
+          stroke="currentColor"
+
+          stroke-width="1.8"
+
+        >
+
+          <rect
+
+            x="4"
+
+            y="10"
+
+            width="16"
+
+            height="10"
+
+            rx="2"
+
+          ></rect>
+
+
+          <path
+
+            d="M8 10V7a4 4 0 0 1 8 0v3"
+
+          ></path>
+
+        </svg>
+
+      </div>
+
+
+      <div>
+
+        <p
+
+          class="text-sm font-semibold text-rust"
+
+        >
+
+          Internal confidentiality notice
+
+        </p>
+
+
+        <p
+
+          class="mt-2 max-w-4xl text-sm leading-relaxed text-ink/60"
+
+        >
+
+          This case study contains internal
+          project information and is intended
+          only for authorised NTT review.
+          Product visuals, workflows, and
+          project details must not be copied,
+          shared, or distributed outside
+          approved internal channels.
+
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+  </main>
+
+  <!-- Footer -->
+
+  <footer
+
+class="bg-ink py-8 text-cream/45"
+
+>
+
+<div
+
+  class="max-w-[1260px] mx-auto px-6 flex flex-col sm:flex-row justify-between gap-4 text-xs"
+
+>
+
+  <p>
+
+    Internal Product Design Portfolio
+
+  </p>
+
+
+  <a
+
+    href="index.html"
+
+    class="transition-colors hover:text-cream"
+
+  >
+
+    ← Back to projects
+
+  </a>
+
+</div>
+
+  </footer>
+
+  <script>
+
+
+    const navbar =
+
+      document.getElementById(
+
+        "navbar"
+
+      );
+
+
+    window.addEventListener(
+
+      "scroll",
+
+      () => {
+
+        if (
+
+          window.scrollY > 20
+
+        ) {
+
+          navbar.classList.add(
+
+            "nav-scrolled"
+
+          );
+
+        }
+
+        else {
+
+          navbar.classList.remove(
+
+            "nav-scrolled"
+
+          );
+
+        }
+
+      }
+
+    );
+
+
+
+    const observer =
+
+      new IntersectionObserver(
+
+        (entries) => {
+
+          entries.forEach(
+
+            (entry) => {
+
+              if (
+
+                entry.isIntersecting
+
+              ) {
+
+                entry.target.classList.add(
+
+                  "visible"
+
+                );
+
+
+                observer.unobserve(
+
+                  entry.target
+
+                );
+
+              }
+
+            }
+
+          );
+
+        },
+
+        {
+
+          threshold: 0.12
+
+        }
+
+      );
+
+
+
+    document
+
+      .querySelectorAll(
+
+        ".reveal"
+
+      )
+
+      .forEach(
+
+        (element) => {
+
+          observer.observe(
+
+            element
+
+          );
+
+        }
+
+      );
+
+
+  </script>
+
+</body>
+
+</html>

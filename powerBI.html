@@ -1,0 +1,914 @@
+<!doctype html>
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>Tableau to Power BI Migration | Moumita Majumder</title>
+
+        <script src="https://cdn.tailwindcss.com"></script>
+
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            ink: "#292126",
+
+                            plum: "#35213F",
+
+                            purple: "#51305F",
+
+                            violet: "#765080",
+
+                            terracotta: "#B65D48",
+
+                            rust: "#8E4336",
+
+                            sand: "#E8D8C5",
+
+                            beige: "#F4EADF",
+
+                            cream: "#FBF7F1",
+
+                            paper: "#FFFDF9",
+
+                            muted: "#756B6A",
+                        },
+
+                        boxShadow: {
+                            soft: "0 20px 55px rgba(53, 33, 63, 0.09)",
+
+                            card: "0 12px 35px rgba(53, 33, 63, 0.10)",
+
+                            lift: "0 25px 60px rgba(53, 33, 63, 0.16)",
+                        },
+                    },
+                },
+            };
+        </script>
+
+        <style>
+            html {
+                scroll-behavior: smooth;
+            }
+
+            body {
+                margin: 0;
+
+                overflow-x: hidden;
+
+                background: #f4eadf;
+
+                color: #292126;
+
+                font-family:
+                    Inter,
+                    ui-sans-serif,
+                    system-ui,
+                    -apple-system,
+                    BlinkMacSystemFont,
+                    "Segoe UI",
+                    sans-serif;
+            }
+
+            .display-font {
+                font-family: Georgia, "Times New Roman", serif;
+            }
+
+            .hero-grid {
+                background-image: linear-gradient(rgba(53, 33, 63, 0.045) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(53, 33, 63, 0.045) 1px, transparent 1px);
+
+                background-size: 48px 48px;
+            }
+
+            .reveal {
+                opacity: 0;
+
+                transform: translateY(22px);
+
+                transition:
+                    opacity 0.7s ease,
+                    transform 0.7s ease;
+            }
+
+            .reveal.visible {
+                opacity: 1;
+
+                transform: translateY(0);
+            }
+
+            .nav-shadow {
+                box-shadow: 0 8px 30px rgba(53, 33, 63, 0.09);
+            }
+
+            .image-card {
+                overflow: hidden;
+
+                transition:
+                    transform 0.4s ease,
+                    box-shadow 0.4s ease;
+            }
+
+            .image-card:hover {
+                transform: translateY(-5px);
+
+                box-shadow: 0 25px 55px rgba(53, 33, 63, 0.15);
+            }
+
+            .image-card img {
+                transition: transform 0.6s ease;
+            }
+
+            .image-card:hover img {
+                transform: scale(1.025);
+            }
+
+            .before-after-image {
+                transition: transform 0.45s ease;
+            }
+
+            .before-after-image:hover {
+                transform: scale(1.015);
+            }
+
+            .json-line {
+                animation: jsonFade 0.55s ease forwards;
+
+                opacity: 0;
+            }
+
+            @keyframes jsonFade {
+                from {
+                    opacity: 0;
+
+                    transform: translateX(-5px);
+                }
+
+                to {
+                    opacity: 1;
+
+                    transform: translateX(0);
+                }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                *,
+                *::before,
+                *::after {
+                    animation-duration: 0.01ms !important;
+
+                    animation-iteration-count: 1 !important;
+
+                    scroll-behavior: auto !important;
+
+                    transition-duration: 0.01ms !important;
+                }
+            }
+        </style>
+        
+    </head>
+
+    <body>
+        <!-- Navigation -->
+
+        <header
+            id="navbar"
+            class="fixed left-0 right-0 top-0 z-50 border-b border-transparent bg-beige/90 backdrop-blur-xl transition-all duration-300"
+        >
+            <div class="mx-auto max-w-[1260px] px-5">
+                <div class="flex h-16 items-center justify-between">
+                            <a href="index.html" class="flex items-center gap-3">
+                        <div
+                            class="flex h-9 w-9 items-center justify-center rounded-xl bg-plum text-xs font-semibold text-sand"
+                        >
+                            MM
+                        </div>
+
+                        <div>
+                            <p class="text-sm font-semibold">Moumita Majumder</p>
+
+                            <p class="text-[11px] text-ink/45">Product Design Portfolio</p>
+                        </div>
+                    </a>
+
+                    <nav class="hidden items-center gap-7 text-sm text-ink/60 md:flex">
+                        <a href="#challenge" class="transition-colors hover:text-terracotta"> Challenge </a>
+
+                        <a href="#approach" class="transition-colors hover:text-terracotta"> Approach </a>
+
+                        <a href="#system" class="transition-colors hover:text-terracotta"> Design system </a>
+
+                        <a href="#transformation" class="transition-colors hover:text-terracotta"> Before & after </a>
+                    </nav>
+
+                    <a
+                        href="index.html#projects"
+                        class="hidden rounded-full border border-plum/15 bg-paper px-4 py-2 text-xs font-medium text-plum transition hover:bg-plum hover:text-paper sm:inline-flex"
+                    >
+                        ← All projects
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <!-- Hero -->
+
+            <section class="relative overflow-hidden pt-16">
+                
+                <div class="hero-grid absolute inset-0"></div>
+
+                <div
+                    class="absolute right-[-180px] top-10 h-[520px] w-[520px] rounded-full bg-terracotta/10 blur-3xl"
+                ></div>
+
+                <div
+                    class="absolute bottom-[-180px] left-[-150px] h-[440px] w-[440px] rounded-full bg-purple/10 blur-3xl"
+                ></div>
+
+                <div class="relative mx-auto max-w-[1260px] px-5 pb-16 pt-16 lg:pb-20 lg:pt-24">
+                    <div class="grid items-end gap-10 lg:grid-cols-12">
+                        <div class="lg:col-span-8">
+                            <div
+                                class="reveal inline-flex items-center gap-3 rounded-full border border-plum/10 bg-paper/85 px-4 py-2 shadow-sm"
+                            >
+                                <span class="h-2 w-2 rounded-full bg-terracotta"></span>
+
+                                <span class="text-xs font-semibold uppercase tracking-[0.15em] text-plum/60">
+                                    Solstice · Enterprise analytics
+                                </span>
+                            </div>
+
+                            <p class="reveal mt-8 text-sm font-semibold uppercase tracking-[0.18em] text-terracotta">
+                                Tableau → Power BI
+                            </p>
+
+                            <h1
+                                class="display-font reveal mt-4 max-w-5xl text-5xl leading-[0.98] tracking-[-0.045em] sm:text-6xl lg:text-7xl"
+                            >
+                                Moving dashboards to a new platform without making people
+
+                                <span class="text-terracotta"> learn everything again. </span>
+                            </h1>
+
+                            <p class="reveal mt-7 max-w-3xl text-lg leading-relaxed text-ink/60 sm:text-xl">
+                                Solstice was moving more than 10 enterprise dashboards from Tableau to Power BI. The job
+                                was not simply to recreate the old screens. It was an opportunity to make the reporting
+                                experience cleaner, more consistent, and easier to scan—while keeping familiar workflows
+                                intact.
+                            </p>
+                        </div>
+
+                        <div class="reveal lg:col-span-4">
+                            <div class="rounded-[28px] border border-plum/10 bg-paper/90 p-6 shadow-soft">
+                                <p class="text-xs font-semibold uppercase tracking-[0.16em] text-ink/40">
+                                    Project snapshot
+                                </p>
+
+                                <div class="mt-6 space-y-5">
+                                    <div>
+                                        <p class="text-xs text-ink/45">Role</p>
+
+                                        <p class="mt-1 font-medium">Product Designer</p>
+                                    </div>
+
+                                    <div class="h-px bg-ink/10"></div>
+
+                                    <div>
+                                        <p class="text-xs text-ink/45">Scope</p>
+
+                                        <p class="mt-1 font-medium">10+ enterprise dashboards</p>
+                                    </div>
+
+                                    <div class="h-px bg-ink/10"></div>
+
+                                    <div>
+                                        <p class="text-xs text-ink/45">Platform</p>
+
+                                        <p class="mt-1 font-medium">Tableau → Power BI</p>
+                                    </div>
+
+                                    <div class="h-px bg-ink/10"></div>
+
+                                    <div>
+                                        <p class="text-xs text-ink/45">Key deliverable</p>
+
+                                        <p class="mt-1 font-medium">Custom Power BI JSON theme</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hero image -->
+
+                    <div
+                        class="reveal mt-12 overflow-hidden rounded-[30px] border border-plum/10 bg-paper p-3 shadow-lift"
+                    >
+                        <div class="relative overflow-hidden rounded-[22px] bg-sand">
+                            <!-- Replace with final hero dashboard image -->
+
+                            <img
+                                src="https://muxdesigns.co.in/wp-content/uploads/2026/04/powerbi.jpg"
+                                alt="Power BI enterprise dashboard redesign"
+                                class="h-auto w-full object-cover"
+                            />
+
+                            <div
+                                class="absolute bottom-5 left-5 rounded-2xl border border-white/20 bg-plum/85 px-4 py-3 text-paper backdrop-blur"
+                            >
+                                <p class="text-[10px] uppercase tracking-[0.16em] text-sand/70">
+                                    Dashboard modernization
+                                </p>
+
+                                <p class="mt-1 text-sm font-medium">A clearer visual system for enterprise reporting</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </section>
+
+            <!-- Challenge -->
+
+            <section id="challenge" class="bg-paper py-16 lg:py-20">
+                
+                <div class="mx-auto max-w-[1260px] px-5">
+                    <div class="grid gap-10 lg:grid-cols-12">
+                        <div class="reveal lg:col-span-5">
+                            <p class="text-sm font-semibold text-terracotta">The challenge</p>
+
+                            <h2 class="display-font mt-3 text-4xl leading-tight sm:text-5xl">
+                                The dashboards worked.
+
+                                <span class="text-purple"> The experience needed attention. </span>
+                            </h2>
+                        </div>
+
+                        <div class="reveal lg:col-span-7">
+                            <p class="max-w-3xl text-lg leading-relaxed text-ink/65">
+                                The existing Tableau dashboards contained important information and supported
+                                established reporting workflows. But layouts, chart styles, spacing, and navigation had
+                                evolved differently over time. Moving to Power BI created a chance to bring those pieces
+                                together.
+                            </p>
+
+                            <p class="mt-5 max-w-3xl leading-relaxed text-ink/55">
+                                There was one important balance to maintain: improve the experience without making
+                                regular users feel like they were starting from scratch. Familiar information needed to
+                                stay familiar, even when the interface around it changed.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                        <div class="reveal rounded-[24px] border border-plum/10 bg-beige p-5">
+                            <p class="text-4xl font-semibold text-terracotta">10+</p>
+
+                            <h3 class="mt-4 font-medium">Dashboards</h3>
+
+                            <p class="mt-2 text-sm leading-relaxed text-ink/55">
+                                Multiple reporting experiences needed to move without interrupting day-to-day work.
+                            </p>
+                        </div>
+
+                        <div class="reveal rounded-[24px] border border-plum/10 bg-beige p-5">
+                            <p class="text-4xl font-semibold text-purple">1</p>
+
+                            <h3 class="mt-4 font-medium">Shared visual language</h3>
+
+                            <p class="mt-2 text-sm leading-relaxed text-ink/55">
+                                One reusable system was needed to keep every dashboard visually connected.
+                            </p>
+                        </div>
+
+                        <div class="reveal rounded-[24px] border border-plum/10 bg-beige p-5">
+                            <p class="text-4xl font-semibold text-terracotta">UX</p>
+
+                            <h3 class="mt-4 font-medium">Clearer data hierarchy</h3>
+
+                            <p class="mt-2 text-sm leading-relaxed text-ink/55">
+                                Dense information needed stronger grouping and faster scan paths.
+                            </p>
+                        </div>
+
+                        <div class="reveal rounded-[24px] border border-plum/10 bg-beige p-5">
+                            <p class="text-4xl font-semibold text-purple">∞</p>
+
+                            <h3 class="mt-4 font-medium">Room to grow</h3>
+
+                            <p class="mt-2 text-sm leading-relaxed text-ink/55">
+                                New dashboards needed a clear starting point instead of a fresh visual approach every
+                                time.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+            </section>
+
+            <!-- Design approach -->
+
+            <section id="approach" class="bg-plum py-16 text-cream lg:py-20">
+                <div class="mx-auto max-w-[1260px] px-5">
+                    <div class="grid gap-10 lg:grid-cols-12">
+                        <div class="reveal lg:col-span-5">
+                            <p class="text-sm font-semibold text-sand">Design approach</p>
+
+                            <h2 class="display-font mt-3 text-4xl leading-tight sm:text-5xl">
+                                We were building a dashboard system,
+
+                                <span class="text-sand"> not redesigning screens one by one. </span>
+                            </h2>
+
+                            <p class="mt-6 max-w-xl leading-relaxed text-cream/60">
+                                Instead of treating every dashboard as a separate design problem, I looked for patterns
+                                that could work across the reporting ecosystem. The goal was to make dashboards feel
+                                related, predictable, and easier to understand at a glance.
+                            </p>
+                        </div>
+
+                        <div class="reveal lg:col-span-7">
+                            <div class="overflow-hidden rounded-[28px] border border-white/10 bg-white/[0.05]">
+                                <div class="grid gap-px bg-white/10 md:grid-cols-2">
+                                    <div class="bg-plum p-6">
+                                        <span class="text-sm text-sand"> 01 </span>
+
+                                        <h3 class="mt-5 text-xl font-medium">Create a familiar structure</h3>
+
+                                        <p class="mt-3 text-sm leading-relaxed text-cream/55">
+                                            Important information stayed in familiar places, while grids, spacing, and
+                                            layouts became more consistent.
+                                        </p>
+                                    </div>
+
+                                    <div class="bg-plum p-6">
+                                        <span class="text-sm text-sand"> 02 </span>
+
+                                        <h3 class="mt-5 text-xl font-medium">Make key information easier to find</h3>
+
+                                        <p class="mt-3 text-sm leading-relaxed text-cream/55">
+                                            KPIs came first, followed by trends and deeper detail, giving users a
+                                            clearer path through the data.
+                                        </p>
+                                    </div>
+
+                                    <div class="bg-plum p-6">
+                                        <span class="text-sm text-sand"> 03 </span>
+
+                                        <h3 class="mt-5 text-xl font-medium">Keep interactions predictable</h3>
+
+                                        <p class="mt-3 text-sm leading-relaxed text-cream/55">
+                                            Filters, slicers, drilldowns, and navigation followed familiar patterns
+                                            across dashboards.
+                                        </p>
+                                    </div>
+
+                                    <div class="bg-plum p-6">
+                                        <span class="text-sm text-sand"> 04 </span>
+
+                                        <h3 class="mt-5 text-xl font-medium">Build for the dashboards still to come</h3>
+
+                                        <p class="mt-3 text-sm leading-relaxed text-cream/55">
+                                            Reusable design rules gave future dashboard teams a stronger and faster
+                                            starting point.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </section>
+
+            <!-- Design system -->
+
+            <section id="system" class="bg-beige py-16 lg:py-20">
+                <div class="mx-auto max-w-[1260px] px-5">
+                    <div class="grid gap-10 lg:grid-cols-12">
+                        <div class="reveal lg:col-span-5">
+                            <p class="text-sm font-semibold text-terracotta">Visual design system</p>
+
+                            <h2 class="display-font mt-3 text-4xl leading-tight sm:text-5xl">
+                                A shared visual language for
+
+                                <span class="text-purple"> every type of dashboard. </span>
+                            </h2>
+
+                            <p class="mt-6 max-w-xl leading-relaxed text-ink/60">
+                                Different dashboards needed different visual emphasis. Executive reporting, operational
+                                tracking, and detailed data tables do not all behave in the same way. The system
+                                provided a consistent foundation while allowing each dashboard type to use the right
+                                visual treatment.
+                            </p>
+                        </div>
+
+                        <div class="reveal lg:col-span-7">
+                            <div class="rounded-[28px] border border-plum/10 bg-paper p-6 shadow-card">
+                                <div class="grid gap-5 sm:grid-cols-2">
+                                    <div>
+                                        <p class="text-xs uppercase tracking-[0.15em] text-ink/40">Typography</p>
+
+                                        <p class="mt-2 text-xl font-medium">Segoe UI</p>
+                                    </div>
+
+                                    <div>
+                                        <p class="text-xs uppercase tracking-[0.15em] text-ink/40">Spacing</p>
+
+                                        <p class="mt-2 text-xl font-medium">8-point system</p>
+                                    </div>
+
+                                    <div>
+                                        <p class="text-xs uppercase tracking-[0.15em] text-ink/40">Layout</p>
+
+                                        <p class="mt-2 text-xl font-medium">Reusable dashboard grids</p>
+                                    </div>
+
+                                    <div>
+                                        <p class="text-xs uppercase tracking-[0.15em] text-ink/40">Components</p>
+
+                                        <p class="mt-2 text-xl font-medium">Cards, KPIs, filters & charts</p>
+                                    </div>
+                                </div>
+
+                                <div class="mt-7 h-px bg-ink/10"></div>
+
+                                <div class="mt-7 flex flex-wrap gap-3">
+                                    <span class="rounded-full bg-plum px-4 py-2 text-xs font-medium text-paper">
+                                        Executive dashboards
+                                    </span>
+
+                                    <span class="rounded-full bg-terracotta px-4 py-2 text-xs font-medium text-paper">
+                                        Operational dashboards
+                                    </span>
+
+                                    <span class="rounded-full bg-sand px-4 py-2 text-xs font-medium text-plum">
+                                        Data tables
+                                    </span>
+
+                                    <span
+                                        class="rounded-full border border-plum/15 bg-paper px-4 py-2 text-xs font-medium text-plum"
+                                    >
+                                        Analytics views
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- JSON example -->
+
+                    <div
+                        class="reveal mt-12 overflow-hidden rounded-[30px] border border-plum/10 bg-[#211923] shadow-lift"
+                    >
+                        <div class="flex items-center justify-between border-b border-white/10 px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                <span class="h-2.5 w-2.5 rounded-full bg-terracotta"></span>
+
+                                <span class="h-2.5 w-2.5 rounded-full bg-sand"></span>
+
+                                <span class="h-2.5 w-2.5 rounded-full bg-violet"></span>
+                            </div>
+
+                            <p class="text-xs text-white/40">Enterprise Data Table Theme · JSON</p>
+                        </div>
+
+                        <div class="overflow-x-auto p-6 sm:p-8">
+                            
+
+                            <pre
+                                class="min-w-[760px] font-mono text-[12px] leading-7 text-white/75"
+                            ><code><span class="json-line" style="animation-delay:.05s;color:#E8D8C5;">{</span>
+<span class="json-line" style="animation-delay:.10s;">  <span style="color:#D98972;">"name"</span>: <span style="color:#E8D8C5;">"Enterprise Data Table Theme"</span>,</span>
+<span class="json-line" style="animation-delay:.15s;">  <span style="color:#D98972;">"visualStyles"</span>: {</span>
+<span class="json-line" style="animation-delay:.20s;">    <span style="color:#B995C4;">"tableEx"</span>: {</span>
+<span class="json-line" style="animation-delay:.25s;">      <span style="color:#B995C4;">"*"</span>: {</span>
+<span class="json-line" style="animation-delay:.30s;">        <span style="color:#D98972;">"grid"</span>: [{</span>
+<span class="json-line" style="animation-delay:.35s;">          <span style="color:#D98972;">"gridVertical"</span>: <span style="color:#E8D8C5;">true</span>,</span>
+<span class="json-line" style="animation-delay:.40s;">          <span style="color:#D98972;">"gridVerticalColor"</span>: {</span>
+<span class="json-line" style="animation-delay:.45s;">            <span style="color:#D98972;">"solid"</span>: { <span style="color:#D98972;">"color"</span>: <span style="color:#E8D8C5;">"#D2D2D2"</span> }</span>
+<span class="json-line" style="animation-delay:.50s;">          },</span>
+<span class="json-line" style="animation-delay:.55s;">          <span style="color:#D98972;">"gridHorizontal"</span>: <span style="color:#E8D8C5;">true</span>,</span>
+<span class="json-line" style="animation-delay:.60s;">          <span style="color:#D98972;">"outlineColor"</span>: {</span>
+<span class="json-line" style="animation-delay:.65s;">            <span style="color:#D98972;">"solid"</span>: { <span style="color:#D98972;">"color"</span>: <span style="color:#E8D8C5;">"#674BE2"</span> }</span>
+<span class="json-line" style="animation-delay:.70s;">          }</span>
+<span class="json-line" style="animation-delay:.75s;">        }],</span>
+<span class="json-line" style="animation-delay:.80s;">        <span style="color:#D98972;">"columnHeaders"</span>: [{</span>
+<span class="json-line" style="animation-delay:.85s;">          <span style="color:#D98972;">"fontColor"</span>: { <span style="color:#D98972;">"solid"</span>: { <span style="color:#D98972;">"color"</span>: <span style="color:#E8D8C5;">"#FFFFFF"</span> } },</span>
+<span class="json-line" style="animation-delay:.90s;">          <span style="color:#D98972;">"backColor"</span>: { <span style="color:#D98972;">"solid"</span>: { <span style="color:#D98972;">"color"</span>: <span style="color:#E8D8C5;">"#323130"</span> } }</span>
+<span class="json-line" style="animation-delay:.95s;">        }]</span>
+<span class="json-line" style="animation-delay:1s;">      }</span>
+<span class="json-line" style="animation-delay:1.05s;">    }</span>
+<span class="json-line" style="animation-delay:1.1s;">  }</span>
+<span class="json-line" style="animation-delay:1.15s;">}</span></code></pre>
+
+                           
+                        </div>
+                    </div>
+
+                    <p class="reveal mt-5 max-w-3xl text-sm leading-relaxed text-ink/50">
+                        The JSON theme turned design decisions into reusable Power BI standards. Instead of manually
+                        styling every table, chart, and dashboard, teams could begin with a consistent visual foundation
+                        and adapt it to the reporting context.
+                    </p>
+                </div>
+                
+            </section>
+
+            <!-- Before and after -->
+
+            <section id="transformation" class="bg-paper py-16 lg:py-20">
+                
+                <div class="mx-auto max-w-[1260px] px-5">
+                    <div class="reveal w-full">
+                        <p class="text-sm font-semibold text-terracotta">Before & after</p>
+
+                        <h2 class="display-font mt-3 text-4xl leading-tight sm:text-5xl">
+                            Familiar reporting,
+
+                            <span class="text-purple"> with a clearer way to read it. </span>
+                        </h2>
+
+                        <p class="mt-5 leading-relaxed text-ink/60">
+                            The goal was not to make the new dashboards look different simply because the platform had
+                            changed. The focus was on reducing visual noise, strengthening hierarchy, and making
+                            important information easier to spot.
+                        </p>
+                    </div>
+
+                    <div class="mt-10 grid gap-6 lg:grid-cols-2">
+                        <div class="reveal">
+                            <div class="mb-4 flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-semibold uppercase tracking-[0.15em] text-ink/40">Before</p>
+
+                                    <h3 class="mt-1 text-2xl font-medium">Tableau</h3>
+                                </div>
+
+                                <span class="rounded-full bg-beige px-3 py-1.5 text-xs text-ink/50">
+                                    Existing experience
+                                </span>
+                            </div>
+
+                            <div
+                                class="before-after-image overflow-hidden rounded-[26px] border border-plum/10 bg-beige p-3"
+                            >
+                                <!-- Replace with Tableau screenshot -->
+
+                                <img
+                                    src="https://muxdesigns.co.in/wp-content/uploads/2026/04/Maturity-Planning-Tb.png"
+                                    alt="Original Tableau dashboard"
+                                    class="h-auto w-full rounded-[18px]"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="reveal">
+                            <div class="mb-4 flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-semibold uppercase tracking-[0.15em] text-terracotta">
+                                        After
+                                    </p>
+
+                                    <h3 class="mt-1 text-2xl font-medium">Power BI</h3>
+                                </div>
+
+                                <span class="rounded-full bg-terracotta px-3 py-1.5 text-xs text-paper">
+                                    Redesigned experience
+                                </span>
+                            </div>
+
+                            <div
+                                class="before-after-image overflow-hidden rounded-[26px] border border-terracotta/20 bg-beige p-3 shadow-card"
+                            >
+                                <!-- Replace with Power BI screenshot -->
+
+                                <img
+                                    src="https://muxdesigns.co.in/wp-content/uploads/2026/04/Maturing-Planning_Final-1536x1250.jpg"
+                                    alt="Redesigned Power BI dashboard"
+                                    class="h-auto w-full rounded-[18px]"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-7 grid gap-4 md:grid-cols-3">
+                        <div class="reveal rounded-2xl border border-ink/10 bg-beige p-5">
+                            <p class="text-sm font-medium text-purple">Stronger hierarchy</p>
+
+                            <p class="mt-2 text-sm leading-relaxed text-ink/55">
+                                Important KPIs became easier to find before users moved into trends and detail.
+                            </p>
+                        </div>
+
+                        <div class="reveal rounded-2xl border border-ink/10 bg-beige p-5">
+                            <p class="text-sm font-medium text-purple">Less visual noise</p>
+
+                            <p class="mt-2 text-sm leading-relaxed text-ink/55">
+                                Cleaner spacing and more consistent chart treatments made dense information easier to
+                                scan.
+                            </p>
+                        </div>
+
+                        <div class="reveal rounded-2xl border border-ink/10 bg-beige p-5">
+                            <p class="text-sm font-medium text-purple">Familiar interactions</p>
+
+                            <p class="mt-2 text-sm leading-relaxed text-ink/55">
+                                Filters and navigation stayed predictable across dashboards, reducing the need to
+                                relearn the experience.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                            </section>
+
+            <!-- Gallery -->
+
+            <section id="gallery" class="bg-beige py-16 lg:py-20">
+                <div class="mx-auto max-w-[1260px] px-5">
+                    <div class="reveal flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+                        <div class="w-full">
+                            <p class="text-sm font-semibold text-terracotta">Dashboard gallery</p>
+
+                            <h2 class="display-font mt-3 text-4xl leading-tight sm:text-5xl">
+                                One system,
+
+                                <span class="text-purple"> adapted to different reporting needs. </span>
+                            </h2>
+                        </div>                      
+                    </div>
+
+                    <div class="mt-10 grid gap-5 md:grid-cols-2">
+                        <div
+                            class="image-card reveal overflow-hidden rounded-[28px] border border-plum/10 bg-paper p-3"
+                        >
+                            <img
+                                src="https://muxdesigns.co.in/wp-content/uploads/2026/04/HW-Executive-Summary-2-1536x806.jpg"
+                                alt="Power BI executive dashboard"
+                                class="h-full w-full rounded-[20px] object-cover"
+                            />
+
+                            <div class="p-4">
+                                <p class="text-xs font-semibold uppercase tracking-[0.14em] text-terracotta">
+                                    Power BI
+                                </p>
+
+                                <h3 class="mt-2 text-xl font-medium">Executive reporting</h3>
+                            </div>
+                        </div>
+
+                        <div
+                            class="image-card reveal overflow-hidden rounded-[28px] border border-plum/10 bg-paper p-3"
+                        >
+                            <img
+                                src="https://muxdesigns.co.in/wp-content/uploads/2026/04/Metrics-Deep-Drive-1536x1400.jpg"
+                                alt="Power BI operational dashboard"
+                                class="h-full w-full rounded-[20px] object-cover"
+                            />
+
+                            <div class="p-4">
+                                <p class="text-xs font-semibold uppercase tracking-[0.14em] text-purple">Power BI</p>
+
+                                <h3 class="mt-2 text-xl font-medium">Operational reporting</h3>
+                            </div>
+                        </div>
+
+                        <div
+                            class="image-card reveal overflow-hidden rounded-[28px] border border-plum/10 bg-paper p-3"
+                        >
+                            <img
+                                src="https://muxdesigns.co.in/wp-content/uploads/2026/04/Transit-Time-Dashboard-1536x1294.jpg"
+                                alt="Power BI analytics dashboard"
+                                class="h-full w-full rounded-[20px] object-cover"
+                            />
+
+                            <div class="p-4">
+                                <p class="text-xs font-semibold uppercase tracking-[0.14em] text-terracotta">
+                                    Power BI
+                                </p>
+
+                                <h3 class="mt-2 text-xl font-medium">Analytics view</h3>
+                            </div>
+                        </div>
+
+                        <div
+                            class="image-card reveal overflow-hidden rounded-[28px] border border-plum/10 bg-paper p-3"
+                        >
+                            <img
+                                src="https://muxdesigns.co.in/wp-content/uploads/2026/04/Premium-Freight-1536x1133.jpg"
+                                alt="Power BI data table dashboard"
+                                class="h-full w-full rounded-[20px] object-cover"
+                            />
+
+                            <div class="p-4">
+                                <p class="text-xs font-semibold uppercase tracking-[0.14em] text-purple">Power BI</p>
+
+                                <h3 class="mt-2 text-xl font-medium">Detailed data tables</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Outcome -->
+
+            <section class="bg-plum py-16 text-cream lg:py-20">
+                <div class="mx-auto max-w-[1000px] px-5 text-center">
+                    <p class="reveal text-sm font-semibold text-sand">What changed</p>
+
+                    <h2 class="display-font reveal mt-4 text-4xl leading-tight sm:text-6xl">
+                        The migration became more than a platform change.
+
+                        <span class="text-sand"> It created a stronger foundation for future reporting. </span>
+                    </h2>
+
+                    <p class="reveal mx-auto mt-7 max-w-3xl text-lg leading-relaxed text-cream/60">
+                        The new Power BI experience brought clearer information hierarchy, more consistent visual
+                        patterns, and predictable interactions across the dashboard ecosystem. Just as importantly, the
+                        shared design system gave future teams a practical foundation to build on.
+                    </p>
+
+                    <a
+                        href="index.html#projects"
+                        class="reveal mt-9 inline-flex items-center gap-3 rounded-full bg-sand px-6 py-3.5 text-sm font-medium text-plum transition hover:-translate-y-1 hover:bg-paper"
+                    >
+                        Explore more projects
+
+                        <span> → </span>
+                    </a>
+                </div>
+                
+            </section>
+        </main>
+
+        <footer class="bg-[#211923] py-8 text-cream/40">
+            <div
+                class="mx-auto flex max-w-[1260px] flex-col items-center justify-between gap-3 px-5 text-xs sm:flex-row"
+            >
+                <p>Product Design Portfolio · Internal Review</p>
+
+                <p>© 2026 · Shared under confidentiality</p>
+            </div>
+            
+        </footer>
+
+        <script>
+            const navbar = document.getElementById("navbar");
+
+            window.addEventListener("scroll",
+
+                () => {
+                    if (window.scrollY > 20) {
+                        navbar.classList.add("nav-shadow", "border-plum/10");
+                    } else {
+                        navbar.classList.remove("nav-shadow", "border-plum/10");
+                    }
+                }
+            );
+
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add("visible");
+
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                },
+
+                {
+                    threshold: 0.1,
+                }
+            );
+
+            document.querySelectorAll(".reveal").forEach((element) => {
+                observer.observe(element);
+            });
+
+            document.querySelectorAll('a[href^="#"]').forEach((link) => {
+                link.addEventListener("click",
+
+                    (event) => {
+                        const target = document.querySelector(link.getAttribute("href"));
+
+                        if (target) {
+                            event.preventDefault();
+
+                            target.scrollIntoView({
+                                behavior: "smooth",
+                                block: "start",
+                            });
+                        }
+                    }
+                );
+            });
+        </script>
+    </body>
+</html>
